@@ -1,0 +1,11 @@
+python-dotenv
+openai>=1.0.0
+google-generativeai
+anthropic
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+statsmodels
+plotly
