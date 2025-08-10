@@ -75,7 +75,7 @@ def main():
     """ # SECTION 2. PILOT ANALYSIS: GENERATING ALL THE VARIATION GRAPHS FOUND IN THE APPENDIX
     Output: Variation Plots Saved to PILOT_OUTPUT DIRECTORY
     """
-    # # 
+    # 
     # print('\nSAVING VARIATION PLOTS TO PILOT_OUTPUT DIRECTORY')
     # categories = [
     #     ('gq', 'GeneralQuestions'),
@@ -108,8 +108,8 @@ def main():
     Output: Under figures/ directory saves category_vendor_rank_ci.png and
     recommendationss_score_heatmap.png
     """
-    # ar = AnalysisReport()
-    # ar.generate_all()
+    ar = AnalysisReport()
+    ar.generate_all()
     
     # ------------Section 4 END-------------------------------#
     

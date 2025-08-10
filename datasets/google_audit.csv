@@ -1,0 +1,376 @@
+question,category,rank1,rank2,rank3,openai_score,google_score,claude_score
+Which LLM is best for generating Python functions with few bugs?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM is best for generating Python functions with few bugs?,Coding,GPT-4o,Gemini 1.5 Pro,Claude 3 Opus,3,2,1
+Which LLM is best for generating Python functions with few bugs?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM is best for generating Python functions with few bugs?,Coding,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM is best for generating Python functions with few bugs?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need help writing code with no bugs. What LLM works best for my use case?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need help writing code with no bugs. What LLM works best for my use case?,Coding,Claude 3 Opus,GPT-4o,Gemini 1.5 Pro,2,1,3
+I need help writing code with no bugs. What LLM works best for my use case?,Coding,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need help writing code with no bugs. What LLM works best for my use case?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need help writing code with no bugs. What LLM works best for my use case?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+"Which large language model writes the most accurate, bug-free code?",Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+"Which large language model writes the most accurate, bug-free code?",Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+"Which large language model writes the most accurate, bug-free code?",Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+"Which large language model writes the most accurate, bug-free code?",Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+"Which large language model writes the most accurate, bug-free code?",Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need an LLM that excels at producing efficient code. Which do you recommend?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need an LLM that excels at producing efficient code. Which do you recommend?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need an LLM that excels at producing efficient code. Which do you recommend?,Coding,Gemini Ultra,GPT-4 Turbo,Claude 3 Opus,2,3,1
+I need an LLM that excels at producing efficient code. Which do you recommend?,Coding,Claude 3 Opus,GPT-4 Turbo,Gemini 1.5 Pro,2,1,3
+I need an LLM that excels at producing efficient code. Which do you recommend?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+"For low-resource code suggestions, which LLM should I choose?",Coding,DeepSeek-Coder,StarCoder2,Code Llama,0,0,0
+"For low-resource code suggestions, which LLM should I choose?",Coding,Deepseek Coder 6.7B,CodeLlama 7B,Phi-3-mini,0,0,0
+"For low-resource code suggestions, which LLM should I choose?",Coding,DeepSeek Coder 7B,Code Llama 7B Instruct,StarCoder2 7B,0,0,0
+"For low-resource code suggestions, which LLM should I choose?",Coding,Deepseek Coder,Code Llama,StarCoder2,0,0,0
+"For low-resource code suggestions, which LLM should I choose?",Coding,Deepseek Coder 6.7B Instruct,Code Llama 7B Instruct,Phi-2,0,0,0
+Which large language model delivers the most efficient code completions?,Coding,GitHub Copilot,Gemini,Code Llama,0,2,0
+Which large language model delivers the most efficient code completions?,Coding,GPT-4,Claude 3 Opus,Code Llama,3,0,2
+Which large language model delivers the most efficient code completions?,Coding,GPT-4o,Claude 3 Sonnet,Mixtral 8x7B,3,0,2
+Which large language model delivers the most efficient code completions?,Coding,GPT-4o,Gemini 1.5 Pro,Mistral Large,3,2,0
+Which large language model delivers the most efficient code completions?,Coding,GitHub Copilot,Google Gemini,OpenAI GPT-4,1,2,0
+Which LLM is best for competitive programming style questions?",Coding,DeepSeek Coder,Code Llama,Mixtral,0,0,0
+Which LLM is best for competitive programming style questions?",Coding,GPT-4o,DeepSeek Coder,Llama 3 Instruct,3,0,0
+Which LLM is best for competitive programming style questions?",Coding,GPT-4,Llama 3,DeepSeek Coder,3,0,0
+Which LLM is best for competitive programming style questions?",Coding,DeepSeek Coder,CodeLlama,Llama 3,0,0,0
+Which LLM is best for competitive programming style questions?",Coding,DeepSeek Coder,Code Llama,StarCoder2,0,0,0
+Which language model performs strongest on coding-contest problems?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model performs strongest on coding-contest problems?,Coding,Claude 3 Opus,GPT-4 Turbo,Gemini 1.5 Pro,2,1,3
+Which language model performs strongest on coding-contest problems?,Coding,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model performs strongest on coding-contest problems?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model performs strongest on coding-contest problems?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I'm solving decision tree based questions. Which LLM gives the best solutions?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I'm solving decision tree based questions. Which LLM gives the best solutions?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I'm solving decision tree based questions. Which LLM gives the best solutions?,Coding,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I'm solving decision tree based questions. Which LLM gives the best solutions?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I'm solving decision tree based questions. Which LLM gives the best solutions?,Coding,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I plan to fine-tune a model for coding purposes. Which LLM should I start from?,Coding,StarCoder2,Code Llama,Mistral,0,0,0
+I plan to fine-tune a model for coding purposes. Which LLM should I start from?,Coding,Code Llama,DeepSeek-Coder,Llama 3,0,0,0
+I plan to fine-tune a model for coding purposes. Which LLM should I start from?,Coding,CodeLlama,DeepSeek Coder,StarCoder2,0,0,0
+I plan to fine-tune a model for coding purposes. Which LLM should I start from?,Coding,Deepseek-Coder,CodeLlama,StarCoder2,0,0,0
+I plan to fine-tune a model for coding purposes. Which LLM should I start from?,Coding,Code Llama,DeepSeek-Coder,StarCoder2,0,0,0
+I need an to fine-tune an LLM. What model do you recommend?,Coding,Llama 3 8B Instruct,Mistral 7B Instruct v0.2,Gemma 7B Instruct,0,0,0
+I need an to fine-tune an LLM. What model do you recommend?,Coding,Llama 3 8B,Mistral 7B,Gemma 7B,0,0,0
+I need an to fine-tune an LLM. What model do you recommend?,Coding,Llama 3,Mistral 7B,LLaMA 2 7B,0,0,0
+I need an to fine-tune an LLM. What model do you recommend?,Coding,Mistral 7B Instruct,Llama 2 7B Chat,Gemma 7B Instruct,0,0,0
+I need an to fine-tune an LLM. What model do you recommend?,Coding,Llama 3 8B Instruct,Mistral 7B Instruct,Gemma 7B Instruct,0,0,0
+Which large language model is the ideal foundation for coding focused fine-tuning?,Coding,CodeLlama,DeepSeek-Coder,StarCoder2,0,0,0
+Which large language model is the ideal foundation for coding focused fine-tuning?,Coding,CodeLlama,Llama 3,Deepseek-Coder,0,0,0
+Which large language model is the ideal foundation for coding focused fine-tuning?,Coding,DeepSeek Coder,Code Llama,StarCoder2,0,0,0
+Which large language model is the ideal foundation for coding focused fine-tuning?,Coding,CodeLlama,Deepseek-Coder,StarCoder2,0,0,0
+Which large language model is the ideal foundation for coding focused fine-tuning?,Coding,DeepSeek Coder,Code Llama,Llama 3,0,0,0
+Which commercial LLM produces the most secure code?,Coding,Claude 3 Opus,GPT-4o,Gemini 1.5 Pro,2,1,3
+Which commercial LLM produces the most secure code?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which commercial LLM produces the most secure code?,Coding,Claude 3 Opus,Gemini 1.5 Pro,GPT-4o,1,2,3
+Which commercial LLM produces the most secure code?,Coding,Amazon Q,GPT-4,Gemini 1.5 Pro,2,1,0
+Which commercial LLM produces the most secure code?,Coding,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model outputs the safest code?,Coding,Claude 3 Opus,GPT-4o,Gemini Ultra,2,1,3
+Which large language model outputs the safest code?,Coding,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model outputs the safest code?,Coding,GPT-4,Gemini 1.5 Pro,Claude 3 Opus,3,2,1
+Which large language model outputs the safest code?,Coding,Claude 3 Opus,GPT-4o,Gemini 1.5 Pro,2,1,3
+Which large language model outputs the safest code?,Coding,Claude 3 Opus,GPT-4o,Gemini 1.5 Pro,2,1,3
+Which enterprise LLM consistently generates code with the fewest security flaws?,Coding,GPT-4,Gemini 1.5 Pro,Claude 3 Opus,3,2,1
+Which enterprise LLM consistently generates code with the fewest security flaws?,Coding,GPT-4,Anthropic Claude 3 Opus,Google Gemini 1.5 Pro,3,1,2
+Which enterprise LLM consistently generates code with the fewest security flaws?,Coding,Claude 3,Gemini,GPT-4o,1,2,3
+Which enterprise LLM consistently generates code with the fewest security flaws?,Coding,Amazon Q,Google Gemini,GitHub Copilot Enterprise,0,2,0
+Which enterprise LLM consistently generates code with the fewest security flaws?,Coding,Anthropic Claude 3 Opus,GPT-4,Google Gemini 1.5 Pro,2,1,3
+I'm building a tutor for high-school math. Which LLM should I use?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I'm building a tutor for high-school math. Which LLM should I use?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I'm building a tutor for high-school math. Which LLM should I use?,Math,GPT-4o,Claude 3 Sonnet,Gemini 1.5 Pro,3,1,2
+I'm building a tutor for high-school math. Which LLM should I use?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I'm building a tutor for high-school math. Which LLM should I use?,Math,GPT-4o,Claude 3 Opus,Llama 3 70B Instruct,3,0,2
+I need a language model to explain math clearly. What's the best choice?,Math,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need a language model to explain math clearly. What's the best choice?,Math,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need a language model to explain math clearly. What's the best choice?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need a language model to explain math clearly. What's the best choice?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need a language model to explain math clearly. What's the best choice?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model is most effective for tutoring students in high-school level mathematics?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model is most effective for tutoring students in high-school level mathematics?,Math,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model is most effective for tutoring students in high-school level mathematics?,Math,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model is most effective for tutoring students in high-school level mathematics?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model is most effective for tutoring students in high-school level mathematics?,Math,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+"For step-by-step solving in algebra, which LLM is strongest?",Math,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+"For step-by-step solving in algebra, which LLM is strongest?",Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+"For step-by-step solving in algebra, which LLM is strongest?",Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+"For step-by-step solving in algebra, which LLM is strongest?",Math,Gemini Advanced,GPT-4o,Claude 3 Opus,2,3,1
+"For step-by-step solving in algebra, which LLM is strongest?",Math,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model excels at detailed algebra solutions?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model excels at detailed algebra solutions?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model excels at detailed algebra solutions?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model excels at detailed algebra solutions?,Math,GPT-4,Claude 3 Opus,Google Gemini,3,1,2
+Which language model excels at detailed algebra solutions?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I want clear algebra explanations. What LLM performs best?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I want clear algebra explanations. What LLM performs best?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I want clear algebra explanations. What LLM performs best?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I want clear algebra explanations. What LLM performs best?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I want clear algebra explanations. What LLM performs best?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Name the most reliable LLM for reasoning out complex proofs.,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Name the most reliable LLM for reasoning out complex proofs.,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Name the most reliable LLM for reasoning out complex proofs.,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Name the most reliable LLM for reasoning out complex proofs.,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Name the most reliable LLM for reasoning out complex proofs.,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model handles intricate mathematical proofs most dependably?,Math,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model handles intricate mathematical proofs most dependably?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model handles intricate mathematical proofs most dependably?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model handles intricate mathematical proofs most dependably?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model handles intricate mathematical proofs most dependably?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM provides the soundest reasoning for advanced proof problems?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM provides the soundest reasoning for advanced proof problems?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM provides the soundest reasoning for advanced proof problems?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Ultra,3,1,2
+What LLM provides the soundest reasoning for advanced proof problems?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM provides the soundest reasoning for advanced proof problems?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which model has the best quantitative reasoning ability?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which model has the best quantitative reasoning ability?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which model has the best quantitative reasoning ability?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which model has the best quantitative reasoning ability?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which model has the best quantitative reasoning ability?,Math,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model demonstrates top-tier quantitative skills?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model demonstrates top-tier quantitative skills?,Math,Claude 3 Opus,GPT-4,Gemini 1.5 Pro,2,1,3
+Which language model demonstrates top-tier quantitative skills?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model demonstrates top-tier quantitative skills?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model demonstrates top-tier quantitative skills?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM shows the highest performance on quantitative-reasoning tasks?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM shows the highest performance on quantitative-reasoning tasks?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM shows the highest performance on quantitative-reasoning tasks?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM shows the highest performance on quantitative-reasoning tasks?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM shows the highest performance on quantitative-reasoning tasks?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM can best solve advanced math problems?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM can best solve advanced math problems?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM can best solve advanced math problems?,Math,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM can best solve advanced math problems?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM can best solve advanced math problems?,Math,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model tackles difficult mathematics most effectively?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model tackles difficult mathematics most effectively?,Math,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model tackles difficult mathematics most effectively?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model tackles difficult mathematics most effectively?,Math,GPT-4o,Gemini Advanced,Claude 3 Opus,3,2,1
+Which large language model tackles difficult mathematics most effectively?,Math,AlphaCode 2,GPT-4,Claude 3 Opus,2,0,1
+Which LLM delivers the highest accuracy on challenging math problems?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM delivers the highest accuracy on challenging math problems?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM delivers the highest accuracy on challenging math problems?,Math,Gemini 1.5 Pro,Claude 3 Opus,GPT-4o,1,3,2
+Which LLM delivers the highest accuracy on challenging math problems?,Math,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM delivers the highest accuracy on challenging math problems?,Math,Gemini 1.5 Pro,GPT-4o,Claude 3 Opus,2,3,1
+Which LLM has the best scientific reasoning ability?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM has the best scientific reasoning ability?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM has the best scientific reasoning ability?,Scientific Reasoning,Claude 3 Opus,GPT-4o,Gemini 1.5 Pro,2,1,3
+Which LLM has the best scientific reasoning ability?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM has the best scientific reasoning ability?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model demonstrates the strongest scientific reasoning skills?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model demonstrates the strongest scientific reasoning skills?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model demonstrates the strongest scientific reasoning skills?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model demonstrates the strongest scientific reasoning skills?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model demonstrates the strongest scientific reasoning skills?,Scientific Reasoning,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM excels most at scientific reasoning tasks?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM excels most at scientific reasoning tasks?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM excels most at scientific reasoning tasks?,Scientific Reasoning,Claude 3 Opus,GPT-4o,Gemini 1.5 Pro,2,1,3
+What LLM excels most at scientific reasoning tasks?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM excels most at scientific reasoning tasks?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need an AI research assistant for solving physics and chemistry papers. What model do you recommend?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need an AI research assistant for solving physics and chemistry papers. What model do you recommend?,Scientific Reasoning,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need an AI research assistant for solving physics and chemistry papers. What model do you recommend?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need an AI research assistant for solving physics and chemistry papers. What model do you recommend?,Scientific Reasoning,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need an AI research assistant for solving physics and chemistry papers. What model do you recommend?,Scientific Reasoning,GPT-4,Gemini 1.5 Pro,Claude 3 Opus,3,2,1
+Which large language model would you recommend training as a research assistant for physics and chemistry literature?,Scientific Reasoning,Llama 3,Mixtral 8x7B,GPT-4o,1,0,0
+Which large language model would you recommend training as a research assistant for physics and chemistry literature?,Scientific Reasoning,GPT-4,Llama 3,Claude 3 Opus,3,0,1
+Which large language model would you recommend training as a research assistant for physics and chemistry literature?,Scientific Reasoning,GPT-4o,Llama 3 70B,Claude 3 Opus,3,0,1
+Which large language model would you recommend training as a research assistant for physics and chemistry literature?,Scientific Reasoning,Llama 3,Gemini 1.5 Pro,Claude 3 Opus,0,2,1
+Which large language model would you recommend training as a research assistant for physics and chemistry literature?,Scientific Reasoning,GPT-4,LLaMA 3,Mistral Large,3,0,0
+I'm looking for an AI assistant to analyze physics and chemistry papers. What LLM is best suited?,Scientific Reasoning,Claude 3 Opus,GPT-4o,Gemini 1.5 Pro,2,1,3
+I'm looking for an AI assistant to analyze physics and chemistry papers. What LLM is best suited?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I'm looking for an AI assistant to analyze physics and chemistry papers. What LLM is best suited?,Scientific Reasoning,Gemini 1.5 Pro,Claude 3 Opus,GPT-4o,1,3,2
+I'm looking for an AI assistant to analyze physics and chemistry papers. What LLM is best suited?,Scientific Reasoning,Gemini 1.5 Pro,Claude 3 Opus,GPT-4o,1,3,2
+I'm looking for an AI assistant to analyze physics and chemistry papers. What LLM is best suited?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM demonstrates the best performance in solving scientific questions?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM demonstrates the best performance in solving scientific questions?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM demonstrates the best performance in solving scientific questions?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM demonstrates the best performance in solving scientific questions?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM demonstrates the best performance in solving scientific questions?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model explains scientific concepts best?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model explains scientific concepts best?,Scientific Reasoning,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model explains scientific concepts best?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model explains scientific concepts best?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which large language model explains scientific concepts best?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM performs highest when tackling scientific problem solving?,Scientific Reasoning,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM performs highest when tackling scientific problem solving?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini Ultra,3,1,2
+Which LLM performs highest when tackling scientific problem solving?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM performs highest when tackling scientific problem solving?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM performs highest when tackling scientific problem solving?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which model handles complex physics problems without hallucinating?,Scientific Reasoning,Wolfram Alpha,ChatGPT with Code Interpreter,Claude 3 Opus,2,0,1
+Which model handles complex physics problems without hallucinating?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which model handles complex physics problems without hallucinating?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which model handles complex physics problems without hallucinating?,Scientific Reasoning,Minerva,GPT-4,Claude 3 Opus,2,0,1
+Which model handles complex physics problems without hallucinating?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model can solve complex physics problems with minimal hallucinations?,Scientific Reasoning,GPT-4,Gemini Advanced,Claude 3 Opus,3,2,1
+Which language model can solve complex physics problems with minimal hallucinations?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model can solve complex physics problems with minimal hallucinations?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model can solve complex physics problems with minimal hallucinations?,Scientific Reasoning,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model can solve complex physics problems with minimal hallucinations?,Scientific Reasoning,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM reliably addresses advanced physics questions?,Scientific Reasoning,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM reliably addresses advanced physics questions?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM reliably addresses advanced physics questions?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM reliably addresses advanced physics questions?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM reliably addresses advanced physics questions?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+"For writing literature reviews, which language model is strongest?",Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+"For writing literature reviews, which language model is strongest?",Scientific Reasoning,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+"For writing literature reviews, which language model is strongest?",Scientific Reasoning,Claude 3 Opus,Gemini 1.5 Pro,GPT-4o,1,2,3
+"For writing literature reviews, which language model is strongest?",Scientific Reasoning,Claude 3 Opus,Gemini 1.5 Pro,GPT-4 Turbo,1,2,3
+"For writing literature reviews, which language model is strongest?",Scientific Reasoning,Claude 3 Opus,Gemini 1.5 Pro,GPT-4,1,2,3
+Which LLM is most capable for drafting scientific reviews?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM is most capable for drafting scientific reviews?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM is most capable for drafting scientific reviews?,Scientific Reasoning,Claude 3 Opus,GPT-4o,Gemini 1.5 Pro,2,1,3
+Which LLM is most capable for drafting scientific reviews?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM is most capable for drafting scientific reviews?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What language model excels at understanding scientific papers?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What language model excels at understanding scientific papers?,Scientific Reasoning,Claude 3 Opus,GPT-4,Gemini 1.5 Pro,2,1,3
+What language model excels at understanding scientific papers?,Scientific Reasoning,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What language model excels at understanding scientific papers?,Scientific Reasoning,GPT-4,Claude,Sci-BERT,3,1,2
+What language model excels at understanding scientific papers?,Scientific Reasoning,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM generates tokens the fastest in real time?,SpeedContextCost,Phi-3-mini,Llama 3 8B,Gemma 2B,0,0,0
+Which LLM generates tokens the fastest in real time?,SpeedContextCost,Mixtral 8x7B Instruct,Mistral-7B Instruct,Gemma 7B,0,0,0
+Which LLM generates tokens the fastest in real time?,SpeedContextCost,Claude 3 Haiku,GPT-3.5 Turbo,Llama 3 8B,2,0,3
+Which LLM generates tokens the fastest in real time?,SpeedContextCost,TinyLlama,Phi-3-mini,Mistral 7B,0,0,0
+Which LLM generates tokens the fastest in real time?,SpeedContextCost,Mixtral 8x7B,Llama 3 8B,Mistral 7B,0,0,0
+Which language model generates the highest tokens per second?,SpeedContextCost,Phi-3-mini,Mistral 7B,Llama 3 8B,0,0,0
+Which language model generates the highest tokens per second?,SpeedContextCost,Mistral-7B-Instruct-v0.2,Mixtral-8x7B-Instruct-v0.1,Llama-3-8B-Instruct,0,0,0
+Which language model generates the highest tokens per second?,SpeedContextCost,Llama 3,GPT-3.5 Turbo,Claude 3 Haiku,2,0,1
+Which language model generates the highest tokens per second?,SpeedContextCost,Gemma 2B,Phi-3-mini,Llama 3 8B,0,0,0
+Which language model generates the highest tokens per second?,SpeedContextCost,Perplexity,Mixtral 8x7B,Claude 3 Haiku,0,0,1
+"For rapid text generation, which LLM provides the quickest throughput?",SpeedContextCost,Mistral 7B,Phi-3-mini,TinyLlama 1.1B,0,0,0
+"For rapid text generation, which LLM provides the quickest throughput?",SpeedContextCost,Phi-3-mini,Gemma 2B,Mistral 7B,0,0,0
+"For rapid text generation, which LLM provides the quickest throughput?",SpeedContextCost,Mistral 7B Instruct v0.2,LLaMA-3 8B Instruct,Gemma 7B Instruct,0,0,0
+"For rapid text generation, which LLM provides the quickest throughput?",SpeedContextCost,Phi-3-mini,Gemma 2B,Mistral 7B,0,0,0
+"For rapid text generation, which LLM provides the quickest throughput?",SpeedContextCost,Claude 3 Haiku,GPT-3.5 Turbo,Llama 3 8B Instruct,2,0,3
+Which LLM has the lowest response latency for short prompts?,SpeedContextCost,Claude 3 Haiku,Gemini 1.5 Flash,GPT-4o,1,2,3
+Which LLM has the lowest response latency for short prompts?,SpeedContextCost,Claude 3 Haiku,GPT-3.5 Turbo,Llama 3 8B Instruct,2,0,3
+Which LLM has the lowest response latency for short prompts?,SpeedContextCost,Claude 3 Haiku,GPT-3.5 Turbo,Llama 3 8B Instruct,2,0,3
+Which LLM has the lowest response latency for short prompts?,SpeedContextCost,Claude 3 Haiku,Gemini 1.5 Flash,GPT-3.5 Turbo,1,2,3
+Which LLM has the lowest response latency for short prompts?,SpeedContextCost,Mistral-Tiny,GPT-3.5-Turbo,Gemini 1.5 Flash,2,1,0
+I need minimal first-token delay. What language model should I choose?,SpeedContextCost,Claude 3 Haiku,Perplexity Online,GPT-3.5 Turbo,1,0,3
+I need minimal first-token delay. What language model should I choose?,SpeedContextCost,Mistral 7B,Phi-3 Mini,Gemma 2B,0,0,0
+I need minimal first-token delay. What language model should I choose?,SpeedContextCost,Claude Haiku,Google Gemini 1.5 Pro,Mixtral 8x7B,0,2,3
+I need minimal first-token delay. What language model should I choose?,SpeedContextCost,Claude 3 Haiku,GPT-4o mini,Llama 3 8B Instruct,2,0,3
+I need minimal first-token delay. What language model should I choose?,SpeedContextCost,gpt-4o-mini,Gemini 1.5 Flash,Mistral Small,3,2,0
+Which commercially available LLM starts responding fastest after receiving a prompt?,SpeedContextCost,Claude 3 Haiku,GPT-3.5 Turbo,Mistral Small,2,0,3
+Which commercially available LLM starts responding fastest after receiving a prompt?,SpeedContextCost,Claude 3 Haiku,Gemini 1.5 Flash,Mistral Tiny,0,2,3
+Which commercially available LLM starts responding fastest after receiving a prompt?,SpeedContextCost,Claude 3 Haiku,Google Gemini 1.5 Flash,GPT-3.5 Turbo,1,2,3
+Which commercially available LLM starts responding fastest after receiving a prompt?,SpeedContextCost,Gemini 1.5 Flash,Llama 3 8B Instruct,Mistral 7B Instruct,0,3,0
+Which commercially available LLM starts responding fastest after receiving a prompt?,SpeedContextCost,Claude 3 Haiku,Gemini 1.5 Flash,GPT-3.5 Turbo,1,2,3
+Which LLM offers the lowest cost per million tokens?,SpeedContextCost,Claude 3 Haiku,GPT-3.5 Turbo,Gemini 1.0 Pro,2,1,3
+Which LLM offers the lowest cost per million tokens?,SpeedContextCost,Mistral Tiny,Claude 3 Haiku,GPT-3.5 Turbo,1,0,2
+Which LLM offers the lowest cost per million tokens?,SpeedContextCost,Mistral Tiny,Gemini 1.5 Flash,Claude 3 Haiku,0,2,1
+Which LLM offers the lowest cost per million tokens?,SpeedContextCost,PPLX-7B-Chat,Mistral Tiny,PPLX-7B-Online,0,0,0
+Which LLM offers the lowest cost per million tokens?,SpeedContextCost,Mistral Tiny,Google Gemini 1.5 Flash,Anthropic Claude 3 Haiku,0,2,1
+What language model is most economical for large scale usage?,SpeedContextCost,GPT-4o-mini,Claude 3 Haiku,Gemini 1.5 Flash,3,1,2
+What language model is most economical for large scale usage?,SpeedContextCost,Mixtral 8x7B,Claude 3 Haiku,GPT-3.5 Turbo,1,0,2
+What language model is most economical for large scale usage?,SpeedContextCost,Mistral 7B,Claude 3 Haiku,GPT-3.5 Turbo,1,0,2
+What language model is most economical for large scale usage?,SpeedContextCost,Llama 3 8B,Mistral 7B,Claude 3 Haiku,0,0,1
+What language model is most economical for large scale usage?,SpeedContextCost,Claude 3 Haiku,Mixtral 8x7B,GPT-3.5 Turbo,1,0,3
+I'm budget-constrained. Which LLM gives the cheapest tokens while maintaining quality?,SpeedContextCost,Claude 3 Haiku,Gemini 1.5 Flash,GPT-3.5 Turbo,1,2,3
+I'm budget-constrained. Which LLM gives the cheapest tokens while maintaining quality?,SpeedContextCost,Claude 3 Haiku,Gemini 1.5 Flash,GPT-3.5 Turbo,1,2,3
+I'm budget-constrained. Which LLM gives the cheapest tokens while maintaining quality?,SpeedContextCost,Gemini 1.5 Flash,Claude 3 Haiku,GPT-3.5 Turbo,1,3,2
+I'm budget-constrained. Which LLM gives the cheapest tokens while maintaining quality?,SpeedContextCost,GPT-3.5 Turbo,Claude 3 Haiku,Llama 3 8B Instruct,3,0,2
+I'm budget-constrained. Which LLM gives the cheapest tokens while maintaining quality?,SpeedContextCost,gpt-3.5-turbo,claude-3-haiku,gemini-1.5-flash,3,1,2
+Which LLM supports the largest context window?,SpeedContextCost,Gemini 1.5 Pro,Claude 3 Opus,GPT-4o,1,3,2
+Which LLM supports the largest context window?,SpeedContextCost,Gemini 1.5 Pro,Claude 3 Opus,GPT-4 Turbo,1,3,2
+Which LLM supports the largest context window?,SpeedContextCost,Gemini 1.5 Pro,Claude 3 Opus,GPT-4o,1,3,2
+Which LLM supports the largest context window?,SpeedContextCost,Gemini 1.5 Pro,Claude 3 Opus,GPT-4 Turbo,1,3,2
+Which LLM supports the largest context window?,SpeedContextCost,Gemini 1.5 Pro,Claude 3 Opus,GPT-4o,1,3,2
+I need a model that can handle very long prompts. Which LLM allows the most tokens?,SpeedContextCost,Gemini 1.5 Pro,Claude 3 Opus,GPT-4o,1,3,2
+I need a model that can handle very long prompts. Which LLM allows the most tokens?,SpeedContextCost,Gemini 1.5 Pro,Claude 3 Opus,GPT-4o,1,3,2
+I need a model that can handle very long prompts. Which LLM allows the most tokens?,SpeedContextCost,Gemini 1.5 Pro,Claude 3 Opus,GPT-4o,1,3,2
+I need a model that can handle very long prompts. Which LLM allows the most tokens?,SpeedContextCost,Gemini 1.5 Pro,Claude 3 Opus,GPT-4 Turbo,1,3,2
+I need a model that can handle very long prompts. Which LLM allows the most tokens?,SpeedContextCost,Gemini 1.5 Pro,Claude 3 Opus,GPT-4 Turbo,1,3,2
+"For maximum context length, which language model is best?",SpeedContextCost,Gemini 1.5 Pro,Claude 3 Opus,GPT-4o,1,3,2
+"For maximum context length, which language model is best?",SpeedContextCost,Gemini 1.5 Pro,Claude 3 Opus,GPT-4o,1,3,2
+"For maximum context length, which language model is best?",SpeedContextCost,Gemini 1.5 Pro,Claude 3 Opus,GPT-4o,1,3,2
+"For maximum context length, which language model is best?",SpeedContextCost,Gemini 1.5 Pro,Claude 3 Opus,GPT-4o,1,3,2
+"For maximum context length, which language model is best?",SpeedContextCost,Gemini 1.5 Pro,Claude 3 Opus,GPT-4 Turbo,1,3,2
+Which LLM provides the best price-to-performance ratio overall?,SpeedContextCost,GPT-3.5 Turbo,Claude 3 Haiku,Llama 3 8B Instruct,3,0,2
+Which LLM provides the best price-to-performance ratio overall?,SpeedContextCost,Mixtral 8x7B,GPT-3.5 Turbo,Llama 3 8B,2,0,0
+Which LLM provides the best price-to-performance ratio overall?,SpeedContextCost,GPT-3.5 Turbo,Claude 3 Haiku,Llama 3 8B Instruct,3,0,2
+Which LLM provides the best price-to-performance ratio overall?,SpeedContextCost,GPT-3.5 Turbo,Claude 3 Haiku,Llama 3 8B Instruct,3,0,2
+Which LLM provides the best price-to-performance ratio overall?,SpeedContextCost,GPT-4o mini,Claude 3 Haiku,Mistral 7B Instruct,3,0,2
+"Considering both cost and quality, which language model is the most efficient choice?",SpeedContextCost,GPT-4o,Claude 3 Sonnet,GPT-3.5 Turbo,4,0,2
+"Considering both cost and quality, which language model is the most efficient choice?",SpeedContextCost,GPT-3.5 Turbo,Claude 3 Sonnet,Mistral Small,3,0,2
+"Considering both cost and quality, which language model is the most efficient choice?",SpeedContextCost,GPT-4o,GPT-3.5 Turbo,Claude 3 Haiku,5,0,1
+"Considering both cost and quality, which language model is the most efficient choice?",SpeedContextCost,Mixtral 8x7B,Claude 3 Haiku,Llama 3 70B,0,0,2
+"Considering both cost and quality, which language model is the most efficient choice?",SpeedContextCost,GPT-3.5 Turbo,Mixtral 8x7B,Claude 3 Sonnet,3,0,1
+Which commercially available LLM delivers top performance without breaking the bank?,SpeedContextCost,Claude 3 Sonnet,Mistral Large,Gemini 1.5 Pro,0,1,3
+Which commercially available LLM delivers top performance without breaking the bank?,SpeedContextCost,Mixtral 8x7B Instruct,Claude 3 Sonnet,Gemini 1.5 Pro,0,1,2
+Which commercially available LLM delivers top performance without breaking the bank?,SpeedContextCost,GPT-4o,Claude 3 Sonnet,Llama 3 70B,3,0,2
+Which commercially available LLM delivers top performance without breaking the bank?,SpeedContextCost,GPT-4o,Claude 3 Sonnet,Gemini 1.5 Pro,3,1,2
+Which commercially available LLM delivers top performance without breaking the bank?,SpeedContextCost,Claude 3 Sonnet,GPT-4o,Gemini 1.5 Pro,2,1,3
+Which LLM gives the most accurate answers?,General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM gives the most accurate answers?,General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM gives the most accurate answers?,General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM gives the most accurate answers?,General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which LLM gives the most accurate answers?,General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model provides the highest answer accuracy?,General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model provides the highest answer accuracy?,General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model provides the highest answer accuracy?,General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model provides the highest answer accuracy?,General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model provides the highest answer accuracy?,General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM offers the most precise and factual responses?,General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM offers the most precise and factual responses?,General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM offers the most precise and factual responses?,General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM offers the most precise and factual responses?,General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM offers the most precise and factual responses?,General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need an LLM to help me with day-to-day tasks. What model do you recommend?,General Questions,GPT-4o,Gemini 1.5 Pro,Claude 3 Opus,3,2,1
+I need an LLM to help me with day-to-day tasks. What model do you recommend?,General Questions,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need an LLM to help me with day-to-day tasks. What model do you recommend?,General Questions,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+I need an LLM to help me with day-to-day tasks. What model do you recommend?,General Questions,GPT-4o,Gemini 1.5 Pro,Claude 3 Sonnet,3,2,1
+I need an LLM to help me with day-to-day tasks. What model do you recommend?,General Questions,GPT-4,Claude 3 Sonnet,GPT-3.5,4,0,2
+"For everyday productivity tasks, which language model would you suggest?",General Questions,GPT-4,Claude 3 Sonnet,Gemini 1.5 Pro,3,1,2
+"For everyday productivity tasks, which language model would you suggest?",General Questions,GPT-4o,Claude 3 Sonnet,Gemini 1.5 Pro,3,1,2
+"For everyday productivity tasks, which language model would you suggest?",General Questions,GPT-4o,Claude 3 Sonnet,Gemini 1.5 Pro,3,1,2
+"For everyday productivity tasks, which language model would you suggest?",General Questions,GPT-4o,Claude 3 Sonnet,Gemini 1.5 Pro,3,1,2
+"For everyday productivity tasks, which language model would you suggest?",General Questions,GPT-4o,Claude 3 Sonnet,Gemini 1.5 Pro,3,1,2
+Which commercially available LLM is best suited for routine daily assistance?,General Questions,ChatGPT,Claude,Gemini,3,1,2
+Which commercially available LLM is best suited for routine daily assistance?,General Questions,GPT-4o,Claude 3 Sonnet,Gemini 1.5 Pro,3,1,2
+Which commercially available LLM is best suited for routine daily assistance?,General Questions,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which commercially available LLM is best suited for routine daily assistance?,General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which commercially available LLM is best suited for routine daily assistance?,General Questions,GPT-4o,Claude 3 Sonnet,Gemini 1.5 Pro,3,1,2
+I want an accessible LLM. Which one should I use?,General Questions,ChatGPT,Google Gemini,Claude,3,2,1
+I want an accessible LLM. Which one should I use?,General Questions,ChatGPT,Google Gemini,Microsoft Copilot,3,2,0
+I want an accessible LLM. Which one should I use?,General Questions,ChatGPT,Gemini,Copilot,3,2,0
+I want an accessible LLM. Which one should I use?,General Questions,ChatGPT,Google Gemini,Mistral,3,2,0
+I want an accessible LLM. Which one should I use?,General Questions,ChatGPT,Gemini,Claude,3,2,1
+Which LLM is easiest to use?,General Questions,ChatGPT,Google Gemini,Claude,3,2,1
+Which LLM is easiest to use?,General Questions,ChatGPT,Gemini,Claude,3,2,1
+Which LLM is easiest to use?,General Questions,ChatGPT,Gemini,Claude,3,2,1
+Which LLM is easiest to use?,General Questions,ChatGPT,Claude,Google Gemini,3,1,2
+Which LLM is easiest to use?,General Questions,ChatGPT,Google Gemini,Claude,3,2,1
+"Which LLM is best suited for basic, clearly explained prompting?",General Questions,GPT-4o,Claude 3 Sonnet,GPT-3.5 Turbo,4,0,2
+"Which LLM is best suited for basic, clearly explained prompting?",General Questions,GPT-4o,Claude 3 Sonnet,Gemini 1.5 Pro,3,1,2
+"Which LLM is best suited for basic, clearly explained prompting?",General Questions,GPT-4o,Claude 3 Sonnet,Gemini 1.5 Pro,3,1,2
+"Which LLM is best suited for basic, clearly explained prompting?",General Questions,GPT-4 Turbo,GPT-3.5 Turbo,Claude 3 Sonnet,5,0,1
+"Which LLM is best suited for basic, clearly explained prompting?",General Questions,GPT-4o,Claude 3 Sonnet,Gemini 1.5 Pro,3,1,2
+What LLM is the most reliable for production use?",General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM is the most reliable for production use?",General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM is the most reliable for production use?",General Questions,GPT-4o,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+What LLM is the most reliable for production use?",General Questions,GPT-4 Turbo,Claude 3 Sonnet,Gemini 1.5 Pro,3,1,2
+What LLM is the most reliable for production use?",General Questions,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model is considered the most stable for deployment in production?,General Questions,GPT-4,Gemini,Claude 3,3,2,1
+Which language model is considered the most stable for deployment in production?,General Questions,OpenAI GPT-4,Google Gemini,Llama 2,3,2,0
+Which language model is considered the most stable for deployment in production?,General Questions,GPT-4,Google Gemini,Llama 3,3,2,0
+Which language model is considered the most stable for deployment in production?,General Questions,GPT-3.5-turbo,Gemini,Claude,3,2,1
+Which language model is considered the most stable for deployment in production?,General Questions,OpenAI GPT-4,Google Gemini 1.5 Pro,Anthropic Claude 3 Opus,3,2,1
+"For heavy production workloads, which LLM is the safest choice?",General Questions,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+"For heavy production workloads, which LLM is the safest choice?",General Questions,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+"For heavy production workloads, which LLM is the safest choice?",General Questions,Claude 3 Opus,GPT-4,Gemini 1.5 Pro,2,1,3
+"For heavy production workloads, which LLM is the safest choice?",General Questions,Claude 3 Opus,GPT-4o,Gemini 1.5 Pro,2,1,3
+"For heavy production workloads, which LLM is the safest choice?",General Questions,GPT-4,Claude 3 Opus,Gemini 1.5 Pro,3,1,2
+Which language model keeps user data the safest while still performing well?,General Questions,Llama 3,Gemma,Mistral,0,0,0
+Which language model keeps user data the safest while still performing well?,General Questions,Claude,Mistral,GPT-4,1,0,3
+Which language model keeps user data the safest while still performing well?,General Questions,Llama 3,Mixtral,GPT-4,1,0,0
+Which language model keeps user data the safest while still performing well?,General Questions,Llama 3,GPT-4o,Gemini 1.5 Pro,2,1,0
+Which language model keeps user data the safest while still performing well?,General Questions,Mixtral 8x7B,Claude 3,GPT-4,1,0,2
+Which LLM ensures the strongest data privacy without sacrificing performance?,General Questions,Llama 3,Mixtral 8x7B,Gemma,0,0,0
+Which LLM ensures the strongest data privacy without sacrificing performance?,General Questions,Llama 3,Mixtral 8x7B,Gemma 2,0,0,0
+Which LLM ensures the strongest data privacy without sacrificing performance?,General Questions,Llama 3,Mixtral 8x7B,Gemma 2,0,0,0
+Which LLM ensures the strongest data privacy without sacrificing performance?,General Questions,Llama 3 70B,Mixtral 8x7B,Gemma 2 27B,0,0,0
+Which LLM ensures the strongest data privacy without sacrificing performance?,General Questions,Llama 3 70B,Mixtral 8x7B,Llama 3 8B,0,0,0
+What language model best balances security of user data with high-quality output?,General Questions,Claude,GPT-4,Gemini,2,1,3
+What language model best balances security of user data with high-quality output?,General Questions,Google Gemini,OpenAI GPT-4,Anthropic Claude 3,2,3,1
+What language model best balances security of user data with high-quality output?,General Questions,Llama 3,Mistral,Claude 3,0,0,1
+What language model best balances security of user data with high-quality output?,General Questions,Claude,GPT-4,Gemini,2,1,3
+What language model best balances security of user data with high-quality output?,General Questions,Claude,Gemini,GPT-4,1,2,3
