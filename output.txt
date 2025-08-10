@@ -1,0 +1,443 @@
+model_ranking_summary.csv written
+model_ranking_expanded.csv ready for regression
+all aliases mapped
+
+Anthropic Expanded File Saved
+Saved to processed_data/anthropic_model_ranking_expanded_newQ.csv
+model_ranking_summary.csv written
+model_ranking_expanded.csv ready for regression
+all aliases mapped
+
+Google Expanded File Saved
+Saved to processed_data/google_model_ranking_expanded_newQ.csv
+model_ranking_summary.csv written
+model_ranking_expanded.csv ready for regression
+all aliases mapped
+
+OpenAI Expanded File Saved
+Saved to processed_data/openai_model_ranking_expanded_newQ.csv
+Saved to processed_data/full_dataset_newQ.csv
+RUNNING ANALYSIS WITH FULL DATASET
+
+==============================  MODEL  ==============================
+
+1. OLS model Regression Results
+
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.367
+Model:                            OLS   Adj. R-squared:                  0.365
+Method:                 Least Squares   F-statistic:                     278.6
+Date:                Mon, 11 Aug 2025   Prob (F-statistic):               0.00
+Time:                        00:20:03   Log-Likelihood:                -3333.6
+No. Observations:                3375   AIC:                             6683.
+Df Residuals:                    3367   BIC:                             6732.
+Df Model:                           7                                         
+Covariance Type:            nonrobust                                         
+================================================================================================================
+                                                   coef    std err          t      P>|t|      [0.025      0.975]
+----------------------------------------------------------------------------------------------------------------
+const                                            2.0000      0.011    178.615      0.000       1.978       2.022
+isSelfPromoted                                  -0.2024      0.012    -16.408      0.000      -0.227      -0.178
+GPQA Diamond (Scientific Reasoning)             -0.2486      0.019    -13.390      0.000      -0.285      -0.212
+Humanity's Last Exam (Reasoning & Knowledge)     0.2227      0.014     16.464      0.000       0.196       0.249
+HumanEval (Coding)                               0.0580      0.016      3.730      0.000       0.028       0.089
+BlendedUSD/1M Tokens                            -0.0817      0.012     -6.962      0.000      -0.105      -0.059
+ContextWindow                                    0.4146      0.013     31.532      0.000       0.389       0.440
+MedianTokens/s                                  -0.0340      0.013     -2.560      0.011      -0.060      -0.008
+==============================================================================
+Omnibus:                        3.943   Durbin-Watson:                   2.752
+Prob(Omnibus):                  0.139   Jarque-Bera (JB):                3.633
+Skew:                           0.031   Prob(JB):                        0.163
+Kurtosis:                       2.851   Cond. No.                         3.24
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+
+2. Coefficient & p-value - model
+                                     Feature  Coefficient       p_value
+                                       const     2.000000  0.000000e+00
+                               ContextWindow     0.414566 1.914787e-191
+Humanity's Last Exam (Reasoning & Knowledge)     0.222672  1.236906e-58
+                              isSelfPromoted    -0.202388  2.874135e-58
+         GPQA Diamond (Scientific Reasoning)    -0.248622  7.133125e-40
+                        BlendedUSD/1M Tokens    -0.081737  4.014222e-12
+                          HumanEval (Coding)     0.058040  1.949106e-04
+                              MedianTokens/s    -0.033991  1.051311e-02
+
+3. VIF - model
+GPQA Diamond (Scientific Reasoning)             2.749817
+HumanEval (Coding)                              1.931471
+Humanity's Last Exam (Reasoning & Knowledge)    1.459011
+MedianTokens/s                                  1.406255
+ContextWindow                                   1.378642
+isSelfPromoted                                  1.213433
+BlendedUSD/1M Tokens                            1.099361
+
+4. Pearson correlations - model
+                                              isSelfPromoted  GPQA Diamond (Scientific Reasoning)  Humanity's Last Exam (Reasoning & Knowledge)  HumanEval (Coding)  BlendedUSD/1M Tokens  ContextWindow  MedianTokens/s
+isSelfPromoted                                      1.000000                             0.319315                                     -0.039647            0.245574             -0.109153       0.219166        0.104662
+GPQA Diamond (Scientific Reasoning)                 0.319315                             1.000000                                      0.442762            0.619034              0.049577       0.456979        0.407416
+Humanity's Last Exam (Reasoning & Knowledge)       -0.039647                             0.442762                                      1.000000            0.098855             -0.072735       0.325022        0.231761
+HumanEval (Coding)                                  0.245574                             0.619034                                      0.098855            1.000000              0.012664       0.161829        0.454669
+BlendedUSD/1M Tokens                               -0.109153                             0.049577                                     -0.072735            0.012664              1.000000      -0.084913       -0.161471
+ContextWindow                                       0.219166                             0.456979                                      0.325022            0.161829             -0.084913       1.000000        0.076097
+MedianTokens/s                                      0.104662                             0.407416                                      0.231761            0.454669             -0.161471       0.076097        1.000000
+heatmap -> figures_corr/heatmap_model.png
+PCA plot -> figures_pcas/pca_model.png
+
+── Category: Coding  (n=675) ──
+
+==============================  CODING_MODEL  ==============================
+
+1. OLS coding_model Regression Results
+
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.297
+Model:                            OLS   Adj. R-squared:                  0.289
+Method:                 Least Squares   F-statistic:                     40.22
+Date:                Mon, 11 Aug 2025   Prob (F-statistic):           2.98e-47
+Time:                        00:20:04   Log-Likelihood:                -702.08
+No. Observations:                 675   AIC:                             1420.
+Df Residuals:                     667   BIC:                             1456.
+Df Model:                           7                                         
+Covariance Type:            nonrobust                                         
+================================================================================================================
+                                                   coef    std err          t      P>|t|      [0.025      0.975]
+----------------------------------------------------------------------------------------------------------------
+const                                            2.0000      0.027     75.442      0.000       1.948       2.052
+isSelfPromoted                                  -0.2025      0.031     -6.483      0.000      -0.264      -0.141
+GPQA Diamond (Scientific Reasoning)             -0.0851      0.037     -2.309      0.021      -0.158      -0.013
+Humanity's Last Exam (Reasoning & Knowledge)     0.1074      0.029      3.689      0.000       0.050       0.165
+HumanEval (Coding)                              -0.1195      0.032     -3.724      0.000      -0.183      -0.057
+BlendedUSD/1M Tokens                            -0.0939      0.027     -3.422      0.001      -0.148      -0.040
+ContextWindow                                    0.3671      0.032     11.447      0.000       0.304       0.430
+MedianTokens/s                                  -0.0292      0.030     -0.960      0.337      -0.089       0.030
+==============================================================================
+Omnibus:                       51.786   Durbin-Watson:                   2.710
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               19.374
+Skew:                           0.137   Prob(JB):                     6.21e-05
+Kurtosis:                       2.216   Cond. No.                         2.50
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+
+2. Coefficient & p-value - coding_model
+                                     Feature  Coefficient      p_value
+                                       const     2.000000 0.000000e+00
+                               ContextWindow     0.367145 7.953908e-28
+                              isSelfPromoted    -0.202464 1.745124e-10
+                          HumanEval (Coding)    -0.119518 2.123196e-04
+Humanity's Last Exam (Reasoning & Knowledge)     0.107422 2.438301e-04
+                        BlendedUSD/1M Tokens    -0.093877 6.599839e-04
+         GPQA Diamond (Scientific Reasoning)    -0.085135 2.125032e-02
+                              MedianTokens/s    -0.029153 3.374605e-01
+
+3. VIF - coding_model
+GPQA Diamond (Scientific Reasoning)             1.934412
+HumanEval (Coding)                              1.465244
+ContextWindow                                   1.463707
+isSelfPromoted                                  1.387557
+MedianTokens/s                                  1.312454
+Humanity's Last Exam (Reasoning & Knowledge)    1.206749
+BlendedUSD/1M Tokens                            1.070945
+
+4. Pearson correlations - coding_model
+                                              isSelfPromoted  GPQA Diamond (Scientific Reasoning)  Humanity's Last Exam (Reasoning & Knowledge)  HumanEval (Coding)  BlendedUSD/1M Tokens  ContextWindow  MedianTokens/s
+isSelfPromoted                                      1.000000                             0.455242                                     -0.073254            0.209280             -0.094906       0.303409        0.139677
+GPQA Diamond (Scientific Reasoning)                 0.455242                             1.000000                                      0.205566            0.456254              0.071845       0.468397        0.234154
+Humanity's Last Exam (Reasoning & Knowledge)       -0.073254                             0.205566                                      1.000000            0.058535             -0.077735       0.286622        0.158384
+HumanEval (Coding)                                  0.209280                             0.456254                                      0.058535            1.000000              0.018681       0.101042        0.413870
+BlendedUSD/1M Tokens                               -0.094906                             0.071845                                     -0.077735            0.018681              1.000000      -0.039856       -0.138408
+ContextWindow                                       0.303409                             0.468397                                      0.286622            0.101042             -0.039856       1.000000       -0.035810
+MedianTokens/s                                      0.139677                             0.234154                                      0.158384            0.413870             -0.138408      -0.035810        1.000000
+heatmap -> figures_corr/heatmap_coding_model.png
+PCA plot -> figures_pcas/pca_coding_model.png
+
+── Category: General Questions  (n=675) ──
+
+==============================  GENERAL_QUESTIONS_MODEL  ==============================
+
+1. OLS general_questions_model Regression Results
+
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.575
+Model:                            OLS   Adj. R-squared:                  0.570
+Method:                 Least Squares   F-statistic:                     128.8
+Date:                Mon, 11 Aug 2025   Prob (F-statistic):          2.11e-119
+Time:                        00:20:05   Log-Likelihood:                -532.30
+No. Observations:                 675   AIC:                             1081.
+Df Residuals:                     667   BIC:                             1117.
+Df Model:                           7                                         
+Covariance Type:            nonrobust                                         
+================================================================================================================
+                                                   coef    std err          t      P>|t|      [0.025      0.975]
+----------------------------------------------------------------------------------------------------------------
+const                                            2.0000      0.021     97.017      0.000       1.960       2.040
+isSelfPromoted                                  -0.2065      0.022     -9.299      0.000      -0.250      -0.163
+GPQA Diamond (Scientific Reasoning)             -0.5352      0.043    -12.452      0.000      -0.620      -0.451
+Humanity's Last Exam (Reasoning & Knowledge)     0.5084      0.031     16.247      0.000       0.447       0.570
+HumanEval (Coding)                               0.2822      0.031      9.072      0.000       0.221       0.343
+BlendedUSD/1M Tokens                            -0.1021      0.032     -3.159      0.002      -0.166      -0.039
+ContextWindow                                    0.4312      0.025     16.923      0.000       0.381       0.481
+MedianTokens/s                                  -0.2086      0.039     -5.401      0.000      -0.284      -0.133
+==============================================================================
+Omnibus:                       30.473   Durbin-Watson:                   2.784
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               36.703
+Skew:                           0.455   Prob(JB):                     1.07e-08
+Kurtosis:                       3.691   Cond. No.                         4.66
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+
+2. Coefficient & p-value - general_questions_model
+                                     Feature  Coefficient      p_value
+                                       const     2.000000 0.000000e+00
+                               ContextWindow     0.431228 1.026708e-53
+Humanity's Last Exam (Reasoning & Knowledge)     0.508354 2.945615e-50
+         GPQA Diamond (Scientific Reasoning)    -0.535198 3.786823e-32
+                              isSelfPromoted    -0.206518 1.998829e-19
+                          HumanEval (Coding)     0.282239 1.294756e-18
+                              MedianTokens/s    -0.208598 9.212411e-08
+                        BlendedUSD/1M Tokens    -0.102133 1.653800e-03
+
+3. VIF - general_questions_model
+GPQA Diamond (Scientific Reasoning)             4.347315
+MedianTokens/s                                  3.509633
+BlendedUSD/1M Tokens                            2.459409
+Humanity's Last Exam (Reasoning & Knowledge)    2.303730
+HumanEval (Coding)                              2.277528
+ContextWindow                                   1.527992
+isSelfPromoted                                  1.160705
+
+4. Pearson correlations - general_questions_model
+                                              isSelfPromoted  GPQA Diamond (Scientific Reasoning)  Humanity's Last Exam (Reasoning & Knowledge)  HumanEval (Coding)  BlendedUSD/1M Tokens  ContextWindow  MedianTokens/s
+isSelfPromoted                                      1.000000                             0.246127                                     -0.004017            0.228329             -0.042829       0.189587        0.061409
+GPQA Diamond (Scientific Reasoning)                 0.246127                             1.000000                                      0.648576            0.620397             -0.110538       0.439385        0.502903
+Humanity's Last Exam (Reasoning & Knowledge)       -0.004017                             0.648576                                      1.000000            0.163029             -0.213475       0.383041        0.350568
+HumanEval (Coding)                                  0.228329                             0.620397                                      0.163029            1.000000             -0.144890       0.160288        0.531981
+BlendedUSD/1M Tokens                               -0.042829                            -0.110538                                     -0.213475           -0.144890              1.000000      -0.187338       -0.653587
+ContextWindow                                       0.189587                             0.439385                                      0.383041            0.160288             -0.187338       1.000000        0.084385
+MedianTokens/s                                      0.061409                             0.502903                                      0.350568            0.531981             -0.653587       0.084385        1.000000
+heatmap -> figures_corr/heatmap_general_questions_model.png
+PCA plot -> figures_pcas/pca_general_questions_model.png
+
+── Category: Math  (n=675) ──
+
+==============================  MATH_MODEL  ==============================
+
+1. OLS math_model Regression Results
+
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.587
+Model:                            OLS   Adj. R-squared:                  0.583
+Method:                 Least Squares   F-statistic:                     135.6
+Date:                Mon, 11 Aug 2025   Prob (F-statistic):          1.07e-123
+Time:                        00:20:05   Log-Likelihood:                -522.24
+No. Observations:                 675   AIC:                             1060.
+Df Residuals:                     667   BIC:                             1097.
+Df Model:                           7                                         
+Covariance Type:            nonrobust                                         
+================================================================================================================
+                                                   coef    std err          t      P>|t|      [0.025      0.975]
+----------------------------------------------------------------------------------------------------------------
+const                                            2.0000      0.020     98.474      0.000       1.960       2.040
+isSelfPromoted                                  -0.1314      0.023     -5.798      0.000      -0.176      -0.087
+GPQA Diamond (Scientific Reasoning)             -0.4394      0.041    -10.819      0.000      -0.519      -0.360
+Humanity's Last Exam (Reasoning & Knowledge)     0.4026      0.030     13.582      0.000       0.344       0.461
+HumanEval (Coding)                               0.2226      0.032      6.937      0.000       0.160       0.286
+BlendedUSD/1M Tokens                            -0.1339      0.022     -6.216      0.000      -0.176      -0.092
+ContextWindow                                    0.4979      0.024     21.155      0.000       0.452       0.544
+MedianTokens/s                                  -0.1571      0.026     -6.040      0.000      -0.208      -0.106
+==============================================================================
+Omnibus:                       79.942   Durbin-Watson:                   2.365
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              176.495
+Skew:                           0.668   Prob(JB):                     4.73e-39
+Kurtosis:                       5.119   Cond. No.                         4.13
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+
+2. Coefficient & p-value - math_model
+                                     Feature  Coefficient      p_value
+                                       const     2.000000 0.000000e+00
+                               ContextWindow     0.497894 2.127551e-76
+Humanity's Last Exam (Reasoning & Knowledge)     0.402606 2.843426e-37
+         GPQA Diamond (Scientific Reasoning)    -0.439413 3.022542e-25
+                          HumanEval (Coding)     0.222559 9.508459e-12
+                        BlendedUSD/1M Tokens    -0.133949 8.981874e-10
+                              MedianTokens/s    -0.157125 2.561848e-09
+                              isSelfPromoted    -0.131425 1.033031e-08
+
+3. VIF - math_model
+GPQA Diamond (Scientific Reasoning)             3.998868
+HumanEval (Coding)                              2.495538
+Humanity's Last Exam (Reasoning & Knowledge)    2.130171
+MedianTokens/s                                  1.640634
+ContextWindow                                   1.342874
+isSelfPromoted                                  1.245397
+BlendedUSD/1M Tokens                            1.125704
+
+4. Pearson correlations - math_model
+                                              isSelfPromoted  GPQA Diamond (Scientific Reasoning)  Humanity's Last Exam (Reasoning & Knowledge)  HumanEval (Coding)  BlendedUSD/1M Tokens  ContextWindow  MedianTokens/s
+isSelfPromoted                                      1.000000                             0.287182                                     -0.036367            0.217700             -0.194581       0.181900        0.137040
+GPQA Diamond (Scientific Reasoning)                 0.287182                             1.000000                                      0.589112            0.642718             -0.027987       0.407668        0.497983
+Humanity's Last Exam (Reasoning & Knowledge)       -0.036367                             0.589112                                      1.000000            0.098795             -0.066018       0.335503        0.249826
+HumanEval (Coding)                                  0.217700                             0.642718                                      0.098795            1.000000              0.050374       0.126423        0.545400
+BlendedUSD/1M Tokens                               -0.194581                            -0.027987                                     -0.066018            0.050374              1.000000      -0.163911       -0.130857
+ContextWindow                                       0.181900                             0.407668                                      0.335503            0.126423             -0.163911       1.000000        0.026527
+MedianTokens/s                                      0.137040                             0.497983                                      0.249826            0.545400             -0.130857       0.026527        1.000000
+heatmap -> figures_corr/heatmap_math_model.png
+PCA plot -> figures_pcas/pca_math_model.png
+
+── Category: Scientific Reasoning  (n=675) ──
+
+==============================  SCIENTIFIC_REASONING_MODEL  ==============================
+
+1. OLS scientific_reasoning_model Regression Results
+
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.662
+Model:                            OLS   Adj. R-squared:                  0.658
+Method:                 Least Squares   F-statistic:                     186.4
+Date:                Mon, 11 Aug 2025   Prob (F-statistic):          2.40e-152
+Time:                        00:20:06   Log-Likelihood:                -455.18
+No. Observations:                 675   AIC:                             926.4
+Df Residuals:                     667   BIC:                             962.5
+Df Model:                           7                                         
+Covariance Type:            nonrobust                                         
+================================================================================================================
+                                                   coef    std err          t      P>|t|      [0.025      0.975]
+----------------------------------------------------------------------------------------------------------------
+const                                            2.0000      0.018    108.760      0.000       1.964       2.036
+isSelfPromoted                                  -0.2120      0.020    -10.357      0.000      -0.252      -0.172
+GPQA Diamond (Scientific Reasoning)             -0.5213      0.031    -16.698      0.000      -0.583      -0.460
+Humanity's Last Exam (Reasoning & Knowledge)     0.3641      0.023     15.926      0.000       0.319       0.409
+HumanEval (Coding)                               0.2874      0.027     10.674      0.000       0.235       0.340
+BlendedUSD/1M Tokens                            -0.1039      0.020     -5.318      0.000      -0.142      -0.066
+ContextWindow                                    0.5375      0.022     24.529      0.000       0.494       0.580
+MedianTokens/s                                  -0.1021      0.025     -4.063      0.000      -0.152      -0.053
+==============================================================================
+Omnibus:                       70.929   Durbin-Watson:                   2.472
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              207.774
+Skew:                           0.508   Prob(JB):                     7.63e-46
+Kurtosis:                       5.521   Cond. No.                         3.32
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+
+2. Coefficient & p-value - scientific_reasoning_model
+                                     Feature  Coefficient      p_value
+                                       const     2.000000 0.000000e+00
+                               ContextWindow     0.537451 3.381970e-95
+         GPQA Diamond (Scientific Reasoning)    -0.521255 1.467892e-52
+Humanity's Last Exam (Reasoning & Knowledge)     0.364070 1.231626e-48
+                          HumanEval (Coding)     0.287378 1.150934e-24
+                              isSelfPromoted    -0.212024 2.066760e-23
+                        BlendedUSD/1M Tokens    -0.103917 1.436723e-07
+                              MedianTokens/s    -0.102145 5.416925e-05
+
+3. VIF - scientific_reasoning_model
+GPQA Diamond (Scientific Reasoning)             2.881695
+HumanEval (Coding)                              2.143333
+MedianTokens/s                                  1.868858
+Humanity's Last Exam (Reasoning & Knowledge)    1.545374
+ContextWindow                                   1.419677
+isSelfPromoted                                  1.239278
+BlendedUSD/1M Tokens                            1.129342
+
+4. Pearson correlations - scientific_reasoning_model
+                                              isSelfPromoted  GPQA Diamond (Scientific Reasoning)  Humanity's Last Exam (Reasoning & Knowledge)  HumanEval (Coding)  BlendedUSD/1M Tokens  ContextWindow  MedianTokens/s
+isSelfPromoted                                      1.000000                             0.302595                                     -0.067754            0.219922             -0.142877       0.205293        0.096611
+GPQA Diamond (Scientific Reasoning)                 0.302595                             1.000000                                      0.473480            0.601167             -0.007300       0.441335        0.500150
+Humanity's Last Exam (Reasoning & Knowledge)       -0.067754                             0.473480                                      1.000000            0.088682             -0.071389       0.340433        0.199814
+HumanEval (Coding)                                  0.219922                             0.601167                                      0.088682            1.000000             -0.008772       0.121879        0.607484
+BlendedUSD/1M Tokens                               -0.142877                            -0.007300                                     -0.071389           -0.008772              1.000000      -0.129112       -0.177309
+ContextWindow                                       0.205293                             0.441335                                      0.340433            0.121879             -0.129112       1.000000        0.029834
+MedianTokens/s                                      0.096611                             0.500150                                      0.199814            0.607484             -0.177309       0.029834        1.000000
+heatmap -> figures_corr/heatmap_scientific_reasoning_model.png
+PCA plot -> figures_pcas/pca_scientific_reasoning_model.png
+
+── Category: SpeedContextCost  (n=675) ──
+
+==============================  SPEEDCONTEXTCOST_MODEL  ==============================
+
+1. OLS speedcontextcost_model Regression Results
+
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.141
+Model:                            OLS   Adj. R-squared:                  0.132
+Method:                 Least Squares   F-statistic:                     15.67
+Date:                Mon, 11 Aug 2025   Prob (F-statistic):           4.37e-19
+Time:                        00:20:06   Log-Likelihood:                -769.57
+No. Observations:                 675   AIC:                             1555.
+Df Residuals:                     667   BIC:                             1591.
+Df Model:                           7                                         
+Covariance Type:            nonrobust                                         
+================================================================================================================
+                                                   coef    std err          t      P>|t|      [0.025      0.975]
+----------------------------------------------------------------------------------------------------------------
+const                                            2.0000      0.029     68.264      0.000       1.942       2.058
+isSelfPromoted                                  -0.2094      0.032     -6.511      0.000      -0.273      -0.146
+GPQA Diamond (Scientific Reasoning)              0.0024      0.059      0.040      0.968      -0.114       0.119
+Humanity's Last Exam (Reasoning & Knowledge)     0.0173      0.035      0.499      0.618      -0.051       0.085
+HumanEval (Coding)                              -0.0330      0.047     -0.705      0.481      -0.125       0.059
+BlendedUSD/1M Tokens                             0.0265      0.039      0.673      0.501      -0.051       0.104
+ContextWindow                                    0.0133      0.038      0.347      0.729      -0.062       0.088
+MedianTokens/s                                   0.2405      0.038      6.309      0.000       0.166       0.315
+==============================================================================
+Omnibus:                      221.621   Durbin-Watson:                   2.916
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               33.218
+Skew:                           0.006   Prob(JB):                     6.12e-08
+Kurtosis:                       1.913   Cond. No.                         4.17
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+
+2. Coefficient & p-value - speedcontextcost_model
+                                     Feature  Coefficient       p_value
+                                       const     2.000000 3.834873e-303
+                              isSelfPromoted    -0.209398  1.465404e-10
+                              MedianTokens/s     0.240504  5.128463e-10
+                          HumanEval (Coding)    -0.032976  4.807842e-01
+                        BlendedUSD/1M Tokens     0.026499  5.010652e-01
+Humanity's Last Exam (Reasoning & Knowledge)     0.017284  6.177400e-01
+                               ContextWindow     0.013257  7.286452e-01
+         GPQA Diamond (Scientific Reasoning)     0.002394  9.678726e-01
+
+3. VIF - speedcontextcost_model
+GPQA Diamond (Scientific Reasoning)             4.112445
+HumanEval (Coding)                              2.545597
+BlendedUSD/1M Tokens                            1.805220
+ContextWindow                                   1.699698
+MedianTokens/s                                  1.693163
+Humanity's Last Exam (Reasoning & Knowledge)    1.396090
+isSelfPromoted                                  1.204812
+
+4. Pearson correlations - speedcontextcost_model
+                                              isSelfPromoted  GPQA Diamond (Scientific Reasoning)  Humanity's Last Exam (Reasoning & Knowledge)  HumanEval (Coding)  BlendedUSD/1M Tokens  ContextWindow  MedianTokens/s
+isSelfPromoted                                      1.000000                             0.310423                                     -0.121167            0.297565             -0.026897       0.207195        0.085313
+GPQA Diamond (Scientific Reasoning)                 0.310423                             1.000000                                      0.116435            0.719866              0.171585       0.528803        0.393031
+Humanity's Last Exam (Reasoning & Knowledge)       -0.121167                             0.116435                                      1.000000            0.000555             -0.316876       0.347708        0.151741
+HumanEval (Coding)                                  0.297565                             0.719866                                      0.000555            1.000000             -0.026234       0.241469        0.231933
+BlendedUSD/1M Tokens                               -0.026897                             0.171585                                     -0.316876           -0.026234              1.000000      -0.039201       -0.378370
+ContextWindow                                       0.207195                             0.528803                                      0.347708            0.241469             -0.039201       1.000000        0.329351
+MedianTokens/s                                      0.085313                             0.393031                                      0.151741            0.231933             -0.378370       0.329351        1.000000
+heatmap -> figures_corr/heatmap_speedcontextcost_model.png
+PCA plot -> figures_pcas/pca_speedcontextcost_model.png
+
+Permutation p‑value (isSelfPromoted) ≈ 0.0000
+perm plot -> figures_perm_test/perm_test_beta_selfPromoted.png
+
+Finished outputs for the single model written.
