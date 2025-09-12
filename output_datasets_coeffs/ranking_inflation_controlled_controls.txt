@@ -1,0 +1,7 @@
+Controls used (same as final model):
+- GPQA Diamond (Scientific Reasoning)
+- Humanity's Last Exam (Reasoning & Knowledge)
+- HumanEval (Coding)
+- BlendedUSD/1M Tokens
+- ContextWindow
+- MedianTokens/s

@@ -143,7 +143,9 @@ def main():
     """ SECTION 6 GENERATES MOST OF THE OUTPUT AND DIAGRAMS"""
     
     print("RUNNING ANALYSIS WITH FULL DATASET")
-    ols = LLMRankingOLS()
+    LLMRankingOLS.run_four_ols_and_plot_from_betas()
+
+    # ols = LLMRankingOLS()
     # ols.run()  # builds cleaned df, fits your baseline, etc.
 
 
@@ -158,8 +160,8 @@ def main():
 
 
     
-    print("\nRUNNING ANALYSIS WITH ANTHROPIC DATASET")
-    LLMRankingOLS(infile='processed_data/anthropic_model_ranking_expanded_newQ.csv').run()
+    # print("\nRUNNING ANALYSIS WITH ANTHROPIC DATASET")
+    # LLMRankingOLS(infile='processed_data/anthropic_model_ranking_expanded_newQ.csv').run()
     # print("\nRUNNING ANALYSIS WITH OPENAI DATASET")
     # LLMRankingOLS(infile='processed_data/openai_model_ranking_expanded_newQ.csv').run()
     # print("\nRUNNING ANALYSIS WITH GOOGLE DATASET")
@@ -169,11 +171,12 @@ def main():
     
     
 
+# ================== REPLACE YOUR EXISTING LLMRankingOLS + main() WITH THIS ==================
+
 class LLMRankingOLS:
     """Run OLS + ordered-logit analyses, generate diagnostic plots, and write
-    coefficient tables for the LLM-bias dataset produced by the audit
-    pipeline.  All figures / CSVs are deposited in purpose-named folders that
-    will be created if they don’t exist.
+    coefficient tables for the LLM-bias dataset produced by the audit pipeline.
+    All figures / CSVs go into purpose-named folders.
     """
 
     # ------------------------------------------------------------------
@@ -185,8 +188,23 @@ class LLMRankingOLS:
     # ------------------------------------------------------------------
     # 1. CONSTRUCTOR ----------------------------------------------------
     # ------------------------------------------------------------------
-    def __init__(self, infile: str | None = None):
+    def __init__(self, infile: str | None = None, label: str | None = None):
         self.infile = infile or self.default_infile
+
+        # Dataset label for namespacing outputs so runs don't overwrite each other
+        if label:
+            self.dataset_label = label
+        else:
+            lf = (self.infile or "").lower()
+            if "anthropic" in lf:
+                self.dataset_label = "Anthropic"
+            elif "openai" in lf:
+                self.dataset_label = "OpenAI"
+            elif "google" in lf:
+                self.dataset_label = "Google"
+            else:
+                self.dataset_label = "Full"
+
         self.df: pd.DataFrame | None = None
         self.y: np.ndarray | None = None
         self.num_cols: list[str] | None = None
@@ -203,6 +221,661 @@ class LLMRankingOLS:
         # ensure output dirs
         for d in ("output_datasets_coeffs", "figures_pcas",
                   "figures_corr", "figures_perm_test", "figures_inflation"):
+            Path(d).mkdir(exist_ok=True)
+
+    # ------------------------------------------------------------------
+    # 2. DATA CLEANING UTILS -------------------------------------------
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _parse_percent(s):
+        return float(s.rstrip("%")) / 100.0 if isinstance(s, str) and s.endswith("%") else s
+
+    @staticmethod
+    def _parse_money(s):
+        if pd.isna(s):
+            return np.nan
+        s = str(s).strip()
+        return float(re.sub(r"[\$,]", "", s)) if s else np.nan
+
+    @staticmethod
+    def _parse_ctx(x):
+        if pd.isna(x):
+            return np.nan
+        s = str(x).strip().lower()
+        mult = 1
+        if s.endswith("k"):
+            mult, s = 1_000, s[:-1]
+        elif s.endswith("m"):
+            mult, s = 1_000_000, s[:-1]
+        try:
+            return float(s) * mult
+        except ValueError:
+            return np.nan
+
+    # ------------------------------------------------------------------
+    def load_clean(self):
+        """Load CSV, coerce strings → numeric, drop MarketShare column, and
+        record `self.y` (rank) + `self.num_cols` (predictor list).
+        """
+        df = pd.read_csv(self.infile)
+        df = df.drop(columns=[c for c in ("MarketShare",) if c in df.columns])
+
+        # convert percentage columns
+        for c in df.columns:
+            if df[c].dtype == object and df[c].str.endswith("%", na=False).any():
+                df[c] = df[c].map(self._parse_percent)
+
+        # money / context / throughput columns
+        if "BlendedUSD/1M Tokens" in df.columns:
+            df["BlendedUSD/1M Tokens"] = df["BlendedUSD/1M Tokens"].map(self._parse_money)
+        if "ContextWindow" in df.columns:
+            df["ContextWindow"] = df["ContextWindow"].map(self._parse_ctx)
+        if "MedianTokens/s" in df.columns:
+            df["MedianTokens/s"] = pd.to_numeric(df["MedianTokens/s"], errors="coerce")
+
+        self.df = df
+        self.y = df["rank"].astype(float).values
+        self.num_cols = df.select_dtypes(include="number").columns.tolist()
+        self.num_cols.remove("rank")
+
+    # ------------------------------------------------------------------
+    # 3. MATRIX BUILDERS ------------------------------------------------
+    # ------------------------------------------------------------------
+    def _design(self, df_slice: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
+        imp = SimpleImputer(strategy="median").fit(df_slice[cols])
+        X_imp = pd.DataFrame(imp.transform(df_slice[cols]), columns=cols)
+        if self.scale_features:
+            sc = StandardScaler().fit(X_imp)
+            X = pd.DataFrame(sc.transform(X_imp), columns=cols)
+        else:
+            X = X_imp
+        return X
+
+    # Small helper to impute (no scaling) so β for a 0→1 dummy is in positions.
+    def _design_unscaled(self, df_slice: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
+        imp = SimpleImputer(strategy="median").fit(df_slice[cols])
+        return pd.DataFrame(imp.transform(df_slice[cols]), columns=cols, index=df_slice.index)
+
+    # ------------------------------------------------------------------
+    # 4. REPORTING HELPERS ---------------------------------------------
+    # ------------------------------------------------------------------
+    def _print_sep(self, tag: str):
+        if tag not in self.tag_header_done:
+            print("\n" + "=" * 30 + f"  {tag.upper()}  " + "=" * 30)
+            self.tag_header_done.add(tag)
+
+    def _vif(self, X: pd.DataFrame, tag: str):
+        vif = pd.Series(
+            [variance_inflation_factor(X.values, i) for i in range(X.shape[1])],
+            index=X.columns,
+        )
+        print("\n3. VIF -", tag)
+        print(vif.sort_values(ascending=False).to_string())
+
+    def _pearson(self, X: pd.DataFrame, tag: str):
+        corr = X.corr()
+        print("\n4. Pearson correlations -", tag)
+        print(corr.to_string())
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(corr, cmap="coolwarm", vmin=-1, vmax=1, center=0,
+                    square=True, annot=True, fmt=".2f",
+                    cbar_kws={"shrink": .8})
+        plt.tight_layout()
+        fname = f"figures_corr/heatmap_{tag}.png"
+        plt.savefig(fname, dpi=300)
+        plt.close()
+        print("heatmap ->", fname)
+
+    def _pca(self, X: pd.DataFrame, tag: str):
+        pca = PCA(n_components=2, random_state=0).fit(X)
+        loads = pd.DataFrame(pca.components_.T, index=X.columns, columns=["PC1", "PC2"])
+        loads.to_csv(f"figures_pcas/pca_loadings_{tag}.csv", index=True)
+        plt.figure(figsize=(6, 5))
+        plt.axhline(0, color="grey", lw=.5); plt.axvline(0, color="grey", lw=.5)
+        plt.scatter(loads.PC1, loads.PC2, s=60)
+        for feat, (xv, yv) in loads.iterrows():
+            plt.text(xv, yv, feat, fontsize=8)
+        plt.title(f"PCA loadings - {tag}")
+        plt.xlabel("PC1"); plt.ylabel("PC2")
+        plt.tight_layout()
+        fname = f"figures_pcas/pca_{tag}.png"
+        plt.savefig(fname, dpi=400)
+        plt.close()
+        print("PCA plot ->", fname)
+
+    def _coef_tbl(self, mdl, tag: str):
+        tbl = pd.DataFrame({
+            "Feature": mdl.params.index,
+            "Coefficient": mdl.params.values,
+            "p_value": mdl.pvalues.values,
+        }).sort_values("p_value")
+        out_fn = f"output_datasets_coeffs/{self.dataset_label}__coeff_and_pvalues_{tag}.csv"
+        tbl.to_csv(out_fn, index=False)
+        print("\n2. Coefficient & p-value -", tag, f"[{self.dataset_label}]")
+        print(tbl.to_string(index=False))
+        print(f"[saved] {out_fn}")
+
+    # ------------------------------------------------------------------
+    # 5. MODELS ---------------------------------------------------------
+    # ------------------------------------------------------------------
+    def _model_block(self, tag: str, df_slice: pd.DataFrame, cols: list[str]):
+        """OLS block with full diagnostics."""
+        X = self._design(df_slice, cols)
+        mdl = sm.OLS(df_slice["rank"].astype(float).values,
+                     sm.add_constant(X)).fit()
+
+        self._print_sep(tag)
+        print("\n1. OLS", tag, "Regression Results\n")
+        print(mdl.summary())
+        self._coef_tbl(mdl, tag)
+        self._vif(X, tag)
+        self._pearson(X, tag)
+        self._pca(X, tag)
+        return X, mdl
+
+    def _ordered_block(self, tag, df_slice, cols, dist="logit"):
+        X = self._design(df_slice, cols)
+        endog = df_slice["rank"].astype(int)         # 1, 2, 3
+        mod = OrderedModel(endog, X, distr=dist)     # no constant!
+        res = mod.fit(method="bfgs", disp=False)
+
+        self._print_sep(tag)
+        print(res.summary())
+
+        # Save coefficients (namespaced!)
+        out_fn = f"output_datasets_coeffs/{self.dataset_label}__coeff_and_pvalues_{tag}.csv"
+        tbl = (res.params.rename_axis("Feature")
+                        .reset_index(name="Coefficient"))
+        tbl["p_value"] = res.pvalues.values
+        tbl.to_csv(out_fn, index=False)
+        print(f"[saved] {out_fn}")
+
+        # optional: Brant-style test if available
+        if hasattr(res, "test_parallel_lines"):
+            po_test = res.test_parallel_lines()
+            print("\nProportional-odds test:", po_test)
+        else:
+            print("\n[parallel-lines test not implemented in this statsmodels build]")
+
+        return X, res
+
+    # ------------------------------------------------------------------
+    # 6. PERMUTATION TEST ----------------------------------------------
+    # ------------------------------------------------------------------
+    def _perm_test(self, X_full: pd.DataFrame, mdl_full):
+        if "isSelfPromoted" not in X_full.columns:
+            return
+        beta_real = mdl_full.params["isSelfPromoted"]
+        B = 5000
+        rng = default_rng(0)
+        betas = np.empty(B)
+        for b in range(B):
+            X_perm = X_full.copy()
+            X_perm["isSelfPromoted"] = rng.permutation(X_full["isSelfPromoted"].values)
+            betas[b] = sm.OLS(self.y, sm.add_constant(X_perm)).fit().params["isSelfPromoted"]
+        p = (np.abs(betas) >= abs(beta_real)).mean()
+        print(f"\nPermutation p-value (isSelfPromoted) ≈ {p:.4f}")
+        plt.figure(figsize=(6, 4))
+        plt.hist(betas, bins=40, edgecolor="k", alpha=.7)
+        plt.axvline(beta_real, color="red", lw=2)
+        plt.tight_layout()
+        fname = "figures_perm_test/perm_test_beta_selfPromoted.png"
+        plt.savefig(fname, dpi=350)
+        plt.close()
+        print("perm plot ->", fname)
+
+    # ------------------------------------------------------------------
+    # 7. PER-CATEGORY BLOCKS -------------------------------------------
+    # ------------------------------------------------------------------
+    def _category_blocks(self, cols2: list[str], base_tag: str = "model"):
+        cat_col = next((c for c in ("category", "task_cat", "Category") if c in self.df.columns), None)
+        if not cat_col:
+            print("\n(no category column - per-category analysis skipped)")
+            return
+        for cat, sub in self.df.groupby(cat_col):
+            tag = f"{cat.replace(' ', '_').lower()}_{base_tag}"
+            print(f"\n── Category: {cat}  (n={len(sub)}) ──")
+            self._model_block(tag, sub, cols2)
+
+    # ------------------------------------------------------------------
+    # 7b. RANKING-INFLATION PLOT (BY RANKER/AUDITED COMPANY; CONTROLLED)
+    # ------------------------------------------------------------------
+    def plot_ranking_inflation(
+        self,
+        domain_col: str | None = None,
+        vendor_col: str | None = None,   # may be 'Creator' incorrectly; we'll override
+        is_self_col: str = "isSelfPromoted",
+        controls: list[str] | None = None,
+        tag: str = "ranking_inflation_controlled_________"
+    ):
+        """
+        Bars show RankingInflation = −β(isSelfPromoted) in *positions*, per Domain × Ranker.
+        - Ranker = audited company that *published the ranking*, NOT model creator.
+        - Controls = same benchmark/price/context/speed variables as final model.
+        Saves CSV + PNG + PDF under figures_inflation/ and output_datasets_coeffs/.
+        """
+        import re
+
+        if self.df is None:
+            raise RuntimeError("Call .load_clean() or .run() before plotting.")
+        df = self.df.copy()
+
+        # ---------- infer domain column ----------
+        if domain_col is None:
+            for cand in ("category", "task_cat", "Category", "Domain", "Task", "TaskGroup"):
+                if cand in df.columns:
+                    domain_col = cand
+                    break
+        if domain_col is None:
+            raise ValueError("Could not infer domain column—pass domain_col explicitly.")
+
+        # ---------- infer RANKER (audited company) column ----------
+        # If vendor_col points at model creator (common mistake), override by guessing ranker.
+        creator_like = {"creator", "modelvendor", "provider", "org", "company_model", "publisher_model"}
+
+        ranker_candidates = [
+            "Ranker", "RankingVendor", "RankingCompany", "ListOwner", "Publisher",
+            "Platform", "Site", "Source", "SourceSite", "Dataset", "ScrapeSource",
+            "Host", "Vendor", "Company"
+        ]
+
+        def _canon_name(x: pd.Series) -> pd.Series:
+            return x.astype(str).str.strip().str.casefold()
+
+        def _map_big3(x: pd.Series) -> pd.Series:
+            m = {"openai": "OpenAI", "google": "Google", "anthropic": "Anthropic"}
+            return x.map(m)
+
+        chosen_ranker_col = None
+
+        if vendor_col and vendor_col in df.columns and vendor_col.lower() not in creator_like:
+            chosen_ranker_col = vendor_col
+
+        if chosen_ranker_col is None:
+            best_score, best_col = 0.0, None
+            for cand in ranker_candidates:
+                if cand in df.columns:
+                    mapped = _map_big3(_canon_name(df[cand]))
+                    score = mapped.notna().mean()
+                    if score > best_score:
+                        best_score, best_col = score, cand
+            if best_col is None:
+                for c in df.columns:
+                    s = _map_big3(_canon_name(df[c]))
+                    if s.notna().any():
+                        best_col = c
+                        break
+            chosen_ranker_col = best_col
+
+        if chosen_ranker_col is None:
+            raise ValueError(
+                "Could not find a ranker/audited-company column. "
+                "Add one like 'Ranker' or 'Source', or pass vendor_col to this method."
+            )
+
+        if vendor_col and vendor_col != chosen_ranker_col:
+            print(f"[info] Using '{chosen_ranker_col}' as RANKER (ignoring '{vendor_col}' which looks like model-creator).")
+
+        df["_Ranker"] = _map_big3(_canon_name(df[chosen_ranker_col]))
+        if df["_Ranker"].isna().all():
+            raise ValueError(f"Ranker column '{chosen_ranker_col}' does not contain OpenAI/Google/Anthropic tokens.")
+
+        df["_DomainCanon"] = df[domain_col].map(lambda s: (
+            "Coding"                 if re.search(r"code|coding|program", str(s), flags=re.I) else
+            "Mathematics"            if re.search(r"math|aime",          str(s), flags=re.I) else
+            "Scientific Reasoning"   if re.search(r"sci",                str(s), flags=re.I) else
+            "General Knowledge"      if re.search(r"general|knowledge|gk|question", str(s), flags=re.I) else
+            "Speed/Context/Cost"     if re.search(r"speed|context|cost|throughput", str(s), flags=re.I) else
+            str(s)
+        ))
+
+        wanted_domains = ["Coding", "Mathematics", "Scientific Reasoning", "General Knowledge", "Speed/Context/Cost"]
+        big3 = ["OpenAI", "Google", "Anthropic"]
+        df = df[df["_Ranker"].isin(big3) & df["_DomainCanon"].isin(wanted_domains)].copy()
+
+        # ---------- controls: same set as the final model ----------
+        if controls is None:
+            if getattr(self, "final_controls", None):
+                controls = [c for c in self.final_controls if c not in ("rank", is_self_col)]
+            elif getattr(self, "cols_model", None):
+                controls = [c for c in self.cols_model if c not in ("rank", is_self_col)]
+            else:
+                fallback = [
+                    "GPQA Diamond (Scientific Reasoning)",
+                    "Humanity's Last Exam (Reasoning & Knowledge)",
+                    "HumanEval (Coding)",
+                    "BlendedUSD/1M Tokens",
+                    "ContextWindow",
+                    "MedianTokens/s",
+                ]
+                controls = [c for c in fallback if c in df.columns]
+
+        # Ensure treatment numeric
+        df[is_self_col] = pd.to_numeric(df[is_self_col], errors="coerce")
+
+        # Local design: *unscaled* so β is in positions
+        def _design_unscaled(df_slice: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
+            imp = SimpleImputer(strategy="median").fit(df_slice[cols])
+            return pd.DataFrame(imp.transform(df_slice[cols]), columns=cols, index=df_slice.index)
+
+        # Fit helper for a (Ranker, Domain) slice
+        def _fit_beta(sub: pd.DataFrame):
+            sub = sub.dropna(subset=[is_self_col])
+            if is_self_col not in sub.columns or sub[is_self_col].nunique() < 2 or len(sub) < 5:
+                return np.nan, np.nan, len(sub)
+            ctrl_present = [c for c in controls
+                            if c in sub.columns and sub[c].notna().sum() > 1 and sub[c].nunique(dropna=True) > 1]
+            X = _design_unscaled(sub, [is_self_col] + ctrl_present)
+            y = sub["rank"].astype(float).values
+            try:
+                mdl = sm.OLS(y, sm.add_constant(X)).fit()
+                beta = mdl.params.get(is_self_col, np.nan)
+            except Exception:
+                beta = np.nan
+            return beta, sub[is_self_col].mean(), len(sub)
+
+        # ---------- collect results ----------
+        rows = []
+        for dom, g_dom in df.groupby("_DomainCanon"):
+            for rk in big3:
+                g = g_dom[g_dom["_Ranker"] == rk]
+                beta, tshare, n = _fit_beta(g)
+                rows.append({
+                    "Domain": dom,
+                    "Vendor": rk,  # audited company / ranker
+                    "Beta_isSelfPromoted": beta,
+                    "RankingInflation": (-beta if pd.notna(beta) else np.nan),
+                    "treated_share": tshare,
+                    "n": int(n),
+                })
+
+        out = pd.DataFrame(rows).sort_values(["Domain", "Vendor"])
+        out.to_csv(f"output_datasets_coeffs/{tag}.csv", index=False)
+        with open(f"output_datasets_coeffs/{tag}_controls.txt", "w") as f:
+            f.write("Controls used (same as final model):\n")
+            for c in controls:
+                f.write(f"- {c}\n")
+        print(f"[saved] output_datasets_coeffs/{tag}.csv")
+        print(f"[saved] output_datasets_coeffs/{tag}_controls.txt")
+
+        # ---------- plot ----------
+        domains = [d for d in wanted_domains if d in out["Domain"].unique()]
+        vendor_order = [v for v in big3 if v in out["Vendor"].unique()]
+        mat = np.full((len(domains), len(vendor_order)), np.nan)
+        for i, d in enumerate(domains):
+            for j, v in enumerate(vendor_order):
+                val = out.loc[(out["Domain"] == d) & (out["Vendor"] == v), "RankingInflation"]
+                if len(val):
+                    mat[i, j] = float(val.iloc[0])
+
+        x = np.arange(len(domains))
+        width = 0.22
+        plt.figure(figsize=(11.5, 6.2))
+        for j, v in enumerate(vendor_order):
+            plt.bar(
+                x + (j - (len(vendor_order)-1)/2) * width,
+                mat[:, j],
+                width=width,
+                edgecolor="black",
+                linewidth=0.7,
+                alpha=0.9,
+                label=v
+            )
+        plt.axhline(0, linewidth=1.2, color="grey")
+        plt.grid(axis="y", linestyle="--", linewidth=0.6, alpha=0.7)
+        plt.xticks(x, domains, rotation=10)
+        plt.ylabel("Ranking inflation (positions)  [= −β(isSelfPromoted), controlled]")
+        plt.title("Self-promotion ranking push by domain (audited rankers, with benchmark controls)",
+                  fontsize=13, pad=8)
+        leg = plt.legend(title="Vendor", frameon=False)
+        if leg and leg.get_title():
+            leg.get_title().set_fontsize(10)
+
+        plt.tight_layout()
+        png = f"figures_inflation/{tag}.png"
+        pdf = f"figures_inflation/{tag}.pdf"
+        plt.savefig(png, dpi=320)
+        plt.savefig(pdf)
+        plt.close()
+        print(f"[saved] {png}")
+        print(f"[saved] {pdf}")
+
+    # ------------------------------------------------------------------
+    # 7c. Compact PDF plot for slides (reads the CSV saved above) -------
+    # ------------------------------------------------------------------
+    def plot_chi_ready(self, domain_col="category", vendor_col="Creator", tag="ranking_inflation_controlled"):
+        wanted_domains = ["Coding", "Mathematics", "Scientific Reasoning", "General Knowledge", "Speed/Context/Cost"]
+        big3 = ["OpenAI", "Google", "Anthropic"]
+
+        out = pd.read_csv(f"output_datasets_coeffs/{tag}.csv")
+        domains = [d for d in wanted_domains if d in out["Domain"].unique()]
+        vendor_order = [v for v in big3 if v in out["Vendor"].unique()]
+
+        mat = np.full((len(domains), len(vendor_order)), np.nan)
+        for i, d in enumerate(domains):
+            for j, v in enumerate(vendor_order):
+                val = out.loc[(out["Domain"] == d) & (out["Vendor"] == v), "RankingInflation"]
+                if len(val):
+                    mat[i, j] = float(val.iloc[0])
+
+        palette = {"OpenAI": "#1f77b4", "Google": "#ff7f0e", "Anthropic": "#2ca02c"}
+        fig, ax = plt.subplots(figsize=(6.5, 3.0))
+        width = 0.25
+        x = np.arange(len(domains))
+
+        for j, v in enumerate(vendor_order):
+            ax.bar(
+                x + (j - (len(vendor_order)-1)/2) * width,
+                mat[:, j],
+                width=width,
+                color=palette[v],
+                label=v,
+                edgecolor="black",
+                linewidth=0.5
+            )
+
+        ax.set_ylabel("Ranking Inflation (positions)", fontsize=10)
+        ax.set_xticks(x)
+        ax.set_xticklabels(domains, rotation=15, ha="right", fontsize=9)
+        ax.grid(axis="y", linestyle="--", alpha=0.3)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+
+        ax.legend(title="Vendor", frameon=False, fontsize=9, title_fontsize=9, ncol=3, loc="upper center", bbox_to_anchor=(0.5, -0.15))
+
+        plt.tight_layout()
+        fig_path = f"figures_inflation/{tag}.pdf"
+        plt.savefig(fig_path, bbox_inches="tight")
+        plt.close()
+        print(f"[saved] {fig_path}")
+
+    # ------------------------------------------------------------------
+    # 7d. STATIC HELPERS FOR THE "USE β FROM PRINT TABLES" FLOW --------
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _read_beta_from_coeff_csv(path: str) -> float | None:
+        if not os.path.exists(path):
+            return None
+        df = pd.read_csv(path)
+        row = df.loc[df["Feature"] == "isSelfPromoted"]
+        return None if row.empty else float(row["Coefficient"].iloc[0])
+
+    @staticmethod
+    def _pretty_domain_from_tag(tag: str) -> str:
+        # tag comes like "coding_model" or "general_knowledge_model"
+        dom = tag.rsplit("_model", 1)[0].replace("_", " ").strip()
+        mapping = {
+            "general knowledge": "General Knowledge",
+            "mathematics": "Mathematics",
+            "scientific reasoning": "Scientific Reasoning",
+            "coding": "Coding",
+            "speedcontextcost": "Speed/Context/Cost",
+            "speed context cost": "Speed/Context/Cost",
+        }
+        key = "".join(ch for ch in dom.lower() if ch.isalnum())
+        return mapping.get(dom.title(), mapping.get(key, dom.title()))
+
+    @staticmethod
+    def run_four_ols_and_plot_from_betas():
+        """
+        1) Run the identical OLS on each dataset (Full/OpenAI/Google/Anthropic).
+        2) Read β(isSelfPromoted) from the coefficient CSVs that the OLS prints.
+        3) Plot bars using those exact β values.
+        """
+        runs = [
+            ("Full",       "processed_data/full_dataset_newQ.csv"),
+            ("OpenAI",     "processed_data/openai_model_ranking_expanded_newQ.csv"),
+            ("Google",     "processed_data/google_model_ranking_expanded_newQ.csv"),
+            ("Anthropic",  "processed_data/anthropic_model_ranking_expanded_newQ.csv"),
+        ]
+
+        # 1) Run them
+        for label, infile in runs:
+            print(f"\nRUNNING ANALYSIS [{label}]  ←  {infile}")
+            LLMRankingOLS(infile=infile, label=label).run()
+
+        # 2) Collect betas
+        rows = []
+        all_files = glob.glob("output_datasets_coeffs/*__coeff_and_pvalues_*_model.csv")
+
+        # Overall "model" files
+        for label, _ in runs:
+            overall = f"output_datasets_coeffs/{label}__coeff_and_pvalues_model.csv"
+            beta = LLMRankingOLS._read_beta_from_coeff_csv(overall)
+            if beta is not None:
+                rows.append({"Domain": "Overall", "Dataset": label, "Beta": beta})
+
+        # Per-category files (…_something_model.csv)
+        for path in all_files:
+            base = os.path.basename(path)
+            label, _, tail = base.partition("__coeff_and_pvalues_")
+            tag = tail.rsplit(".csv", 1)[0]  # e.g., "coding_model"
+            if tag == "model":
+                continue
+            dom = LLMRankingOLS._pretty_domain_from_tag(tag)
+            beta = LLMRankingOLS._read_beta_from_coeff_csv(path)
+            if beta is not None:
+                rows.append({"Domain": dom, "Dataset": label, "Beta": beta})
+
+        if not rows:
+            print("[WARN] No coefficient tables found to plot.")
+            return
+
+        dfb = pd.DataFrame(rows)
+
+        # 3) Plot from printed betas
+        wanted_order = ["Coding", "Mathematics", "Scientific Reasoning",
+                        "General Knowledge", "Speed/Context/Cost", "Overall"]
+        domains = [d for d in wanted_order if d in dfb["Domain"].unique()]
+        datasets = [d for d in ["OpenAI", "Google", "Anthropic", "Full"] if d in dfb["Dataset"].unique()]
+
+        x = np.arange(len(domains))
+        width = 0.8 / max(1, len(datasets))
+
+        plt.figure(figsize=(11.5, 6.2))
+        for j, lab in enumerate(datasets):
+            sub = dfb[dfb["Dataset"] == lab].set_index("Domain")
+            vals = [sub.loc[d, "Beta"] if d in sub.index else np.nan for d in domains]
+            plt.bar(
+                x + j*width - (len(datasets)-1)*width/2,
+                vals, width=width, label=lab,
+                edgecolor="black", linewidth=0.7, alpha=0.9
+            )
+
+        plt.axhline(0, color="grey", lw=1.2)
+        plt.grid(axis="y", linestyle="--", linewidth=0.6, alpha=0.7)
+        plt.xticks(x, domains, rotation=10)
+        plt.ylabel("β(isSelfPromoted)  (scaled OLS coeff)")
+        plt.title("Self-promotion β by dataset (same spec, same scaling/controls)")
+        plt.legend(title="Dataset", frameon=False, ncol=min(4, len(datasets)))
+        plt.tight_layout()
+
+        Path("figures_inflation").mkdir(exist_ok=True)
+        out_png = "figures_inflation/betas_from_printed_tables.png"
+        out_pdf = "figures_inflation/betas_from_printed_tables.pdf"
+        plt.savefig(out_png, dpi=320)
+        plt.savefig(out_pdf)
+        plt.close()
+        print(f"[saved] {out_png}\n[saved] {out_pdf}")
+
+    # ------------------------------------------------------------------
+    # 8. MAIN ENTRY FOR ONE DATASET ------------------------------------
+    # ------------------------------------------------------------------
+    def run(self):
+        self.load_clean()
+
+        # Your final model drops these benchmarks:
+        drop_list = [
+            "MMLU-Pro (Reasoning & Knowledge)",
+            "LiveCodeBench (Coding)",
+            "SciCode (Coding)",
+            "AIME 2024 (Competition Math)",
+            "MATH-500 (Quantitative Reasoning)",
+        ]
+        cols_model = [c for c in self.num_cols if c not in drop_list]
+        self.cols_model = cols_model  # expose spec to plotting if needed
+
+        # Fit the single OLS model and save outputs under the tag "model"
+        X_model, mdl_model = self._model_block("model", self.df, cols_model)
+
+        # Save EXACT predictors used in the design matrix + the exact controls
+        self.final_predictors = list(X_model.columns)                 # includes isSelfPromoted
+        self.final_controls = [c for c in self.final_predictors if c != "isSelfPromoted"]
+
+        # Per-category runs of the same model spec
+        self._category_blocks(cols_model, base_tag="model")
+
+        # Permutation test for the isSelfPromoted coefficient on this model
+        self._perm_test(X_model, mdl_model)
+
+        print("\nFinished outputs for the single model written.")
+
+
+
+    # --------------------------------------------------------------------
+# ================== END REPLACEMENT ==================
+    """Run OLS + ordered-logit analyses, generate diagnostic plots, and write
+    coefficient tables for the LLM-bias dataset produced by the audit
+    pipeline.  All figures / CSVs are deposited in purpose-named folders that
+    will be created if they don’t exist.
+    """
+
+    # ------------------------------------------------------------------
+    # 0. CONFIGURATION --------------------------------------------------
+    # ------------------------------------------------------------------
+    default_infile: str = "processed_data/full_dataset_newQ.csv"
+    scale_features: bool = True  # z-score numerical predictors
+
+    # ------------------------------------------------------------------
+    # 1. CONSTRUCTOR ----------------------------------------------------
+    # ------------------------------------------------------------------
+    def __init__(self, infile: str | None = None, label: str | None = None):
+        self.infile = infile or self.default_infile
+        # NEW: label so files don't overwrite between runs
+        if label:
+            self.dataset_label = label
+        else:
+            lf = (self.infile or "").lower()
+            if "anthropic" in lf:
+                self.dataset_label = "Anthropic"
+            elif "openai" in lf:
+                self.dataset_label = "OpenAI"
+            elif "google" in lf:
+                self.dataset_label = "Google"
+            else:
+                self.dataset_label = "Full"
+
+        self.df: pd.DataFrame | None = None
+        self.y: np.ndarray | None = None
+        self.num_cols: list[str] | None = None
+        self.tag_header_done: set[str] = set()
+
+        self.final_predictors: list[str] | None = None
+        self.final_controls: list[str] | None = None
+        self.cols_model: list[str] | None = None
+
+        for d in ("output_datasets_coeffs", "figures_pcas",
+                "figures_corr", "figures_perm_test", "figures_inflation"):
             Path(d).mkdir(exist_ok=True)
 
     # ------------------------------------------------------------------
@@ -331,9 +1004,12 @@ class LLMRankingOLS:
             "Coefficient": mdl.params.values,
             "p_value": mdl.pvalues.values,
         }).sort_values("p_value")
-        tbl.to_csv(f"output_datasets_coeffs/coeff_and_pvalues_{tag}_anthropic.csv", index=False)
-        print("\n2. Coefficient & p-value -", tag)
+        # NEW: prefix with dataset label so each run writes distinct files
+        out_fn = f"output_datasets_coeffs/{self.dataset_label}__coeff_and_pvalues_{tag}.csv"
+        tbl.to_csv(out_fn, index=False)
+        print("\n2. Coefficient & p-value -", tag, f"[{self.dataset_label}]")
         print(tbl.to_string(index=False))
+        print(f"[saved] {out_fn}")
 
     # ------------------------------------------------------------------
     # 5. MODELS ---------------------------------------------------------
@@ -366,7 +1042,7 @@ class LLMRankingOLS:
         tbl = (res.params.rename_axis("Feature")
                         .reset_index(name="Coefficient"))
         tbl["p_value"] = res.pvalues.values
-        tbl.to_csv(f"output_datasets_coeffs/coeff_and_pvalues_{tag}_anthropic.csv", index=False)
+        tbl.to_csv(f"output_datasets_coeffs/coeff_and_pvalues_{tag}.csv", index=False)
 
         # optional: Brant-style test if available
         if hasattr(res, "test_parallel_lines"):
@@ -424,20 +1100,18 @@ class LLMRankingOLS:
     def plot_ranking_inflation(
         self,
         domain_col: str | None = None,
-        vendor_col: str | None = None,   # may be 'Creator' incorrectly; we'll override
+        vendor_col: str | None = None,   # pass the column that identifies the *ranker* if you have it; otherwise we infer
         is_self_col: str = "isSelfPromoted",
         controls: list[str] | None = None,
-        tag: str = "ranking_inflation_controlled_________"
+        tag: str = "ranking_inflation_controlled"
     ):
         """
-        Bars show RankingInflation = −β(isSelfPromoted) in *positions*, per Domain × Ranker.
-        - Ranker = audited company that *published the ranking*, NOT model creator.
-        - Controls = same benchmark/price/context/speed variables as final model.
-
+        Bars show Ranking Inflation = −β(isSelfPromoted) in *positions*, per Domain × Ranker (OpenAI/Google/Anthropic).
+        X-axis always displays the five canonical domains, even if some are missing for a given dataset.
         Saves:
-          output_datasets_coeffs/{tag}.csv
-          output_datasets_coeffs/{tag}_controls.txt
-          figures_inflation/{tag}.png and .pdf
+        output_datasets_coeffs/{tag}.csv
+        output_datasets_coeffs/{tag}_controls.txt
+        figures_inflation/{tag}.png and .pdf
         """
         import re
 
@@ -445,7 +1119,27 @@ class LLMRankingOLS:
             raise RuntimeError("Call .load_clean() or .run() before plotting.")
         df = self.df.copy()
 
-        # ---------- infer domain column ----------
+        # ---------- canonical domain buckets (exact strings required) ----------
+        DOMAINS = ["Coding", "Math", "Scientific Reasoning", "General Questions", "Speed Context Cost"]
+
+        def canon_domain(val: str) -> str:
+            s = str(val)
+            s_l = s.lower()
+            # map numerous variants into the requested 5 labels
+            if re.search(r"code|coding|program", s_l):
+                return "Coding"
+            if re.search(r"\bmath|aime", s_l):
+                return "Math"
+            if re.search(r"sci", s_l):
+                return "Scientific Reasoning"
+            if re.search(r"general|knowledge|gk|question", s_l):
+                return "General Questions"
+            if re.search(r"speed|context|cost|throughput", s_l):
+                return "Speed Context Cost"
+            # fallback: try to preserve existing exact label if it already matches
+            return s if s in DOMAINS else s
+
+        # ---------- infer the domain column if not provided ----------
         if domain_col is None:
             for cand in ("category", "task_cat", "Category", "Domain", "Task", "TaskGroup"):
                 if cand in df.columns:
@@ -453,16 +1147,15 @@ class LLMRankingOLS:
                     break
         if domain_col is None:
             raise ValueError("Could not infer domain column—pass domain_col explicitly.")
+        df["_DomainCanon"] = df[domain_col].map(canon_domain)
 
-        # ---------- infer RANKER (audited company) column ----------
-        # If vendor_col points at model creator (common mistake), override by guessing ranker.
+        # ---------- infer RANKER (audited company that published the ranking) ----------
+        # if caller passed a usable ranker column, use it; otherwise search common names
         creator_like = {"creator", "modelvendor", "provider", "org", "company_model", "publisher_model"}
-
-        # Candidate columns that typically hold the *ranking company / source site*
         ranker_candidates = [
             "Ranker", "RankingVendor", "RankingCompany", "ListOwner", "Publisher",
             "Platform", "Site", "Source", "SourceSite", "Dataset", "ScrapeSource",
-            "Host", "Vendor", "Company"  # 'Vendor'/'Company' sometimes hold the ranker in your CSVs
+            "Host", "Vendor", "Company"
         ]
 
         def _canon_name(x: pd.Series) -> pd.Series:
@@ -473,63 +1166,47 @@ class LLMRankingOLS:
             return x.map(m)
 
         chosen_ranker_col = None
-
-        # If caller passed a usable ranker, keep it; if it's creator-like, we’ll override.
         if vendor_col and vendor_col in df.columns and vendor_col.lower() not in creator_like:
             chosen_ranker_col = vendor_col
-
         if chosen_ranker_col is None:
-            # score each candidate by share mapping to Big 3 tokens
             best_score, best_col = 0.0, None
             for cand in ranker_candidates:
                 if cand in df.columns:
                     mapped = _map_big3(_canon_name(df[cand]))
-                    score = mapped.notna().mean()  # fraction that looks like OpenAI/Google/Anthropic
+                    score = mapped.notna().mean()
                     if score > best_score:
                         best_score, best_col = score, cand
+            # last resort: scan every column for any Big-3 token
             if best_col is None:
-                # last resort: if there is exactly one column with Big 3 tokens anywhere, use it
                 for c in df.columns:
                     s = _map_big3(_canon_name(df[c]))
                     if s.notna().any():
                         best_col = c
                         break
             chosen_ranker_col = best_col
-
         if chosen_ranker_col is None:
             raise ValueError(
                 "Could not find a ranker/audited-company column. "
                 "Add one like 'Ranker' or 'Source', or pass vendor_col to this method."
             )
 
-        if vendor_col and vendor_col != chosen_ranker_col:
-            print(f"[info] Using '{chosen_ranker_col}' as RANKER (ignoring '{vendor_col}' which looks like model-creator).")
-
-        # Canonicalize Ranker + Domain
         df["_Ranker"] = _map_big3(_canon_name(df[chosen_ranker_col]))
         if df["_Ranker"].isna().all():
             raise ValueError(f"Ranker column '{chosen_ranker_col}' does not contain OpenAI/Google/Anthropic tokens.")
-        df["_DomainCanon"] = df[domain_col].map(lambda s: (
-            "Coding"                 if re.search(r"code|coding|program", str(s), flags=re.I) else
-            "Mathematics"            if re.search(r"math|aime",          str(s), flags=re.I) else
-            "Scientific Reasoning"   if re.search(r"sci",                str(s), flags=re.I) else
-            "General Knowledge"      if re.search(r"general|knowledge|gk|question", str(s), flags=re.I) else
-            "Speed/Context/Cost"     if re.search(r"speed|context|cost|throughput", str(s), flags=re.I) else
-            str(s)
-        ))
 
-        wanted_domains = ["Coding", "Mathematics", "Scientific Reasoning", "General Knowledge", "Speed/Context/Cost"]
-        big3 = ["OpenAI", "Google", "Anthropic"]
-        df = df[df["_Ranker"].isin(big3) & df["_DomainCanon"].isin(wanted_domains)].copy()
+        # ---------- keep only rows for Big-3 rankers and our 5 domains ----------
+        BIG3 = ["OpenAI", "Google", "Anthropic"]
+        df = df[df["_Ranker"].isin(BIG3)].copy()
+        df = df[df["_DomainCanon"].isin(DOMAINS)].copy()
 
-        # ---------- controls: same set as the final model ----------
+        # ---------- controls: same set as final model if available ----------
         if controls is None:
             if getattr(self, "final_controls", None):
                 controls = [c for c in self.final_controls if c not in ("rank", is_self_col)]
             elif getattr(self, "cols_model", None):
                 controls = [c for c in self.cols_model if c not in ("rank", is_self_col)]
             else:
-                fallback = [
+                controls = [
                     "GPQA Diamond (Scientific Reasoning)",
                     "Humanity's Last Exam (Reasoning & Knowledge)",
                     "HumanEval (Coding)",
@@ -537,12 +1214,13 @@ class LLMRankingOLS:
                     "ContextWindow",
                     "MedianTokens/s",
                 ]
-                controls = [c for c in fallback if c in df.columns]
+            # keep only those controls that actually exist in this df
+            controls = [c for c in controls if c in df.columns]
 
-        # Ensure treatment numeric
+        # ensure treatment is numeric
         df[is_self_col] = pd.to_numeric(df[is_self_col], errors="coerce")
 
-        # Local design: *unscaled* so β is in positions
+        # Local unscaled design so the β is in rank positions (0→1 dummy)
         def _design_unscaled(df_slice: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
             imp = SimpleImputer(strategy="median").fit(df_slice[cols])
             return pd.DataFrame(imp.transform(df_slice[cols]), columns=cols, index=df_slice.index)
@@ -552,29 +1230,28 @@ class LLMRankingOLS:
             sub = sub.dropna(subset=[is_self_col])
             if is_self_col not in sub.columns or sub[is_self_col].nunique() < 2 or len(sub) < 5:
                 return np.nan, np.nan, len(sub)
-            # keep only controls that exist AND vary in-slice
-            ctrl_present = [c for c in controls
-                            if c in sub.columns and sub[c].notna().sum() > 1 and sub[c].nunique(dropna=True) > 1]
+            ctrl_present = [c for c in controls if sub[c].notna().sum() > 1 and sub[c].nunique(dropna=True) > 1]
             X = _design_unscaled(sub, [is_self_col] + ctrl_present)
             y = sub["rank"].astype(float).values
             try:
                 mdl = sm.OLS(y, sm.add_constant(X)).fit()
-                beta = mdl.params.get(is_self_col, np.nan)   # positions / unit increase in the dummy (0→1)
+                beta = mdl.params.get(is_self_col, np.nan)   # positions for a 0→1 increase in the dummy
             except Exception:
                 beta = np.nan
             return beta, sub[is_self_col].mean(), len(sub)
 
-        # ---------- collect results ----------
+        # ---------- collect results for ALL FIVE DOMAINS (even if empty) ----------
         rows = []
-        for dom, g_dom in df.groupby("_DomainCanon"):
-            for rk in big3:
+        for dom in DOMAINS:
+            g_dom = df[df["_DomainCanon"] == dom]
+            for rk in BIG3:
                 g = g_dom[g_dom["_Ranker"] == rk]
-                beta, tshare, n = _fit_beta(g)
+                beta, tshare, n = _fit_beta(g) if len(g) else (np.nan, np.nan, 0)
                 rows.append({
                     "Domain": dom,
                     "Vendor": rk,  # audited company / ranker
                     "Beta_isSelfPromoted": beta,
-                    "RankingInflation": (-beta if pd.notna(beta) else np.nan),
+                    "RankingInflation": (-beta if pd.notna(beta) else np.nan),  # y = −β
                     "treated_share": tshare,
                     "n": int(n),
                 })
@@ -582,23 +1259,22 @@ class LLMRankingOLS:
         out = pd.DataFrame(rows).sort_values(["Domain", "Vendor"])
         out.to_csv(f"output_datasets_coeffs/{tag}.csv", index=False)
         with open(f"output_datasets_coeffs/{tag}_controls.txt", "w") as f:
-            f.write("Controls used (same as final model):\n")
+            f.write("Controls used:\n")
             for c in controls:
                 f.write(f"- {c}\n")
         print(f"[saved] output_datasets_coeffs/{tag}.csv")
         print(f"[saved] output_datasets_coeffs/{tag}_controls.txt")
 
         # ---------- plot ----------
-        domains = [d for d in wanted_domains if d in out["Domain"].unique()]
-        vendor_order = [v for v in big3 if v in out["Vendor"].unique()]
-        mat = np.full((len(domains), len(vendor_order)), np.nan)
-        for i, d in enumerate(domains):
+        x = np.arange(len(DOMAINS))
+        vendor_order = [v for v in BIG3 if v in out["Vendor"].unique()]
+        mat = np.full((len(DOMAINS), len(vendor_order)), np.nan)
+        for i, d in enumerate(DOMAINS):
             for j, v in enumerate(vendor_order):
                 val = out.loc[(out["Domain"] == d) & (out["Vendor"] == v), "RankingInflation"]
                 if len(val):
                     mat[i, j] = float(val.iloc[0])
 
-        x = np.arange(len(domains))
         width = 0.22
         plt.figure(figsize=(11.5, 6.2))
         for j, v in enumerate(vendor_order):
@@ -611,12 +1287,17 @@ class LLMRankingOLS:
                 alpha=0.9,
                 label=v
             )
+
         plt.axhline(0, linewidth=1.2, color="grey")
         plt.grid(axis="y", linestyle="--", linewidth=0.6, alpha=0.7)
-        plt.xticks(x, domains, rotation=10)
-        plt.ylabel("Ranking inflation (positions)  [= −β(isSelfPromoted), controlled]")
-        plt.title("Self-promotion ranking push by domain (audited rankers, with benchmark controls)",
-                  fontsize=13, pad=8)
+        plt.xticks(x, DOMAINS, rotation=10)
+
+        # informative axes
+        plt.xlabel("Domain (prompt category)")
+        plt.ylabel("Ranking Inflation (positions higher when the ranked model is self-promoted)\n"
+                "= −β(isSelfPromoted) from OLS with benchmark/price/context/speed controls")
+
+        plt.title("Self-promotion ranking push by domain (Big 3 vendors)", fontsize=13, pad=8)
         leg = plt.legend(title="Vendor", frameon=False)
         if leg and leg.get_title():
             leg.get_title().set_fontsize(10)
@@ -635,54 +1316,175 @@ class LLMRankingOLS:
     # ------------------------------------------------------------------
     # 7c. Compact PDF plot for slides (reads the CSV saved above) -------
     # ------------------------------------------------------------------
-    def plot_chi_ready(self, domain_col="category", vendor_col="Creator", tag="ranking_inflation_controlled"):
-        # read the same CSV produced by plot_ranking_inflation(tag=...)
-        wanted_domains = ["Coding", "Mathematics", "Scientific Reasoning", "General Knowledge", "Speed/Context/Cost"]
-        big3 = ["OpenAI", "Google", "Anthropic"]
+    def plot_chi_ready(self, tag: str = "ranking_inflation_controlled"):
+        """
+        Compact, slide-ready version that *reads* the CSV from plot_ranking_inflation(tag=...),
+        and always shows the five canonical domains on the x-axis in the same order.
+        """
+        import numpy as np
+        import pandas as pd
+        import matplotlib.pyplot as plt
+
+        DOMAINS = ["Coding", "Math", "Scientific Reasoning", "General Questions", "Speed Context Cost"]
+        BIG3 = ["OpenAI", "Google", "Anthropic"]
+        palette = {"OpenAI": "#1f77b4", "Google": "#ff7f0e", "Anthropic": "#2ca02c"}
 
         out = pd.read_csv(f"output_datasets_coeffs/{tag}.csv")
-        domains = [d for d in wanted_domains if d in out["Domain"].unique()]
-        vendor_order = [v for v in big3 if v in out["Vendor"].unique()]
+        vendor_order = [v for v in BIG3 if v in out["Vendor"].unique()]
 
-        mat = np.full((len(domains), len(vendor_order)), np.nan)
-        for i, d in enumerate(domains):
+        mat = np.full((len(DOMAINS), len(vendor_order)), np.nan)
+        for i, d in enumerate(DOMAINS):
             for j, v in enumerate(vendor_order):
                 val = out.loc[(out["Domain"] == d) & (out["Vendor"] == v), "RankingInflation"]
                 if len(val):
                     mat[i, j] = float(val.iloc[0])
 
-        palette = {"OpenAI": "#1f77b4", "Google": "#ff7f0e", "Anthropic": "#2ca02c"}
         fig, ax = plt.subplots(figsize=(6.5, 3.0))
         width = 0.25
-        x = np.arange(len(domains))
+        x = np.arange(len(DOMAINS))
 
         for j, v in enumerate(vendor_order):
             ax.bar(
                 x + (j - (len(vendor_order)-1)/2) * width,
                 mat[:, j],
                 width=width,
-                color=palette[v],
+                color=palette.get(v, None),
                 label=v,
                 edgecolor="black",
                 linewidth=0.5
             )
 
-        ax.set_ylabel("Ranking Inflation (positions)", fontsize=10)
+        # labels
+        ax.set_xlabel("Domain (prompt category)", fontsize=10)
+        ax.set_ylabel("Ranking Inflation (positions higher when self-promoted)\n= −β(isSelfPromoted)", fontsize=10)
+
         ax.set_xticks(x)
-        ax.set_xticklabels(domains, rotation=15, ha="right", fontsize=9)
+        ax.set_xticklabels(DOMAINS, rotation=15, ha="right", fontsize=9)
         ax.grid(axis="y", linestyle="--", alpha=0.3)
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
 
         ax.legend(title="Vendor", frameon=False, fontsize=9, title_fontsize=9,
-                  ncol=3, loc="upper center", bbox_to_anchor=(0.5, -0.15))
+                ncol=3, loc="upper center", bbox_to_anchor=(0.5, -0.15))
 
         plt.tight_layout()
         fig_path = f"figures_inflation/{tag}.pdf"
         plt.savefig(fig_path, bbox_inches="tight")
         plt.close()
         print(f"[saved] {fig_path}")
+
        
+    @staticmethod
+    def _read_beta_from_coeff_csv(path: str) -> float | None:
+        if not os.path.exists(path):
+            return None
+        df = pd.read_csv(path)
+        row = df.loc[df["Feature"] == "isSelfPromoted"]
+        return None if row.empty else float(row["Coefficient"].iloc[0])
+
+    @staticmethod
+    def _pretty_domain_from_tag(tag: str) -> str:
+        """
+        Convert per-category file tags like 'coding_model' or 'general_knowledge_model'
+        into the 5 canonical labels used on the x-axis.
+        """
+        dom = tag.rsplit("_model", 1)[0].replace("_", " ").strip()
+        mapping = {
+            # canonical labels we want on the x-axis
+            "coding": "Coding",
+            "mathematics": "Math",
+            "math": "Math",
+            "scientific reasoning": "Scientific Reasoning",
+            "general knowledge": "General Questions",
+            "general questions": "General Questions",
+            "speedcontextcost": "Speed Context Cost",
+            "speed context cost": "Speed Context Cost",
+        }
+        key = "".join(ch for ch in dom.lower() if ch.isalnum() or ch.isspace()).strip()
+        return mapping.get(dom.lower(), mapping.get(key, dom.title()))
+
+    @staticmethod
+    def run_four_ols_and_plot_from_betas():
+        """
+        Run identical OLS on each dataset (Full/OpenAI/Google/Anthropic), collect the printed
+        β(isSelfPromoted) for each *category* (no Overall), and plot −β with all five domains
+        on the x-axis, dropping the 'Full' dataset from the legend/bars.
+        """
+        # 1) Run identical OLS on each dataset (writes labeled coeff CSVs)
+        runs = [
+            ("Full",       "processed_data/full_dataset_newQ.csv"),
+            ("OpenAI",     "processed_data/openai_model_ranking_expanded_newQ.csv"),
+            ("Google",     "processed_data/google_model_ranking_expanded_newQ.csv"),
+            ("Anthropic",  "processed_data/anthropic_model_ranking_expanded_newQ.csv"),
+        ]
+        for label, infile in runs:
+            print(f"\nRUNNING ANALYSIS [{label}]  ←  {infile}")
+            LLMRankingOLS(infile=infile, label=label).run()
+
+        # 2) Collect β(isSelfPromoted) from saved per-category tables ONLY (drop 'Overall')
+        rows = []
+        all_files = glob.glob("output_datasets_coeffs/*__coeff_and_pvalues_*_model.csv")
+        for path in all_files:
+            base = os.path.basename(path)
+            label, _, tail = base.partition("__coeff_and_pvalues_")
+            tag = tail.rsplit(".csv", 1)[0]  # e.g., "coding_model"
+            if tag == "model":
+                # that's the overall run; skip so 'Overall' never appears on the x-axis
+                continue
+            dom = LLMRankingOLS._pretty_domain_from_tag(tag)
+            beta = LLMRankingOLS._read_beta_from_coeff_csv(path)
+            if beta is not None:
+                rows.append({"Domain": dom, "Dataset": label, "Beta": beta})
+
+        if not rows:
+            print("[WARN] No per-category coefficient tables found to plot.")
+            return
+
+        dfb = pd.DataFrame(rows)
+
+        # 3) Build the plot with ALL five domains on the x-axis, in fixed order
+        DOMAINS = ["Coding", "Math", "Scientific Reasoning", "General Questions", "Speed Context Cost"]
+        datasets = ["OpenAI", "Google", "Anthropic"]  # drop 'Full'
+        datasets = [d for d in datasets if d in dfb["Dataset"].unique()]
+
+        x = np.arange(len(DOMAINS))
+        width = 0.8 / max(1, len(datasets))
+
+        plt.figure(figsize=(11.5, 6.2))
+        for j, lab in enumerate(datasets):
+            sub = dfb[dfb["Dataset"] == lab].set_index("Domain")
+            # −β on the y-axis; if a domain is missing for a dataset, plot NaN (no bar)
+            vals = [(-sub.loc[d, "Beta"]) if d in sub.index else np.nan for d in DOMAINS]
+            plt.bar(
+                x + j*width - (len(datasets)-1)*width/2,
+                vals,
+                width=width,
+                label=lab,
+                edgecolor="black",
+                linewidth=0.7,
+                alpha=0.9
+            )
+
+        plt.axhline(0, color="grey", lw=1.2)
+        plt.grid(axis="y", linestyle="--", linewidth=0.6, alpha=0.7)
+        plt.xticks(x, DOMAINS, rotation=10)
+
+        # informative axes
+        plt.xlabel("Domain (prompt category)")
+        plt.ylabel("Ranking Inflation (positions higher when self-promoted)\n"
+                "= −β(isSelfPromoted) taken from printed OLS tables")
+
+        plt.title("Self-promotion effect by dataset (−β from identical OLS spec)")
+        plt.legend(title="Dataset", frameon=False, ncol=min(3, len(datasets)))
+        plt.tight_layout()
+
+        Path("figures_inflation").mkdir(exist_ok=True)
+        out_png = "figures_inflation/betas_from_printed_tables_neg.png"
+        out_pdf = "figures_inflation/betas_from_printed_tables_neg.pdf"
+        plt.savefig(out_png, dpi=320)
+        plt.savefig(out_pdf)
+        plt.close()
+        print(f"[saved] {out_png}\n[saved] {out_pdf}")
 
 
     # ------------------------------------------------------------------
